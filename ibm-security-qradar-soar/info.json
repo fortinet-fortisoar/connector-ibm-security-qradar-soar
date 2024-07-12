@@ -1,0 +1,296 @@
+{
+  "name": "ibm-security-qradar-soar",
+  "version": "1.0.0",
+  "label": "IBM Security QRadar SOAR",
+  "description": "IBM Security QRadar SOAR is a software platform designed to help organizations manage and respond to security incidents effectively. It provides a comprehensive approach to incident response by integrating with various security tools and automating processes to streamline incident handling.",
+  "publisher": "Fortinet",
+  "cs_approved": false,
+  "cs_compatible": true,
+  "help_online": "",
+  "icon_small_name": "small.png",
+  "icon_large_name": "large.png",
+  "category": "SOAR",
+  "configuration": {
+    "fields": [
+      {
+        "title": "Server URL",
+        "description": "Specify the URL of the IBM Resilient server to connect and perform automated operations.",
+        "type": "text",
+        "name": "server_url",
+        "required": true,
+        "editable": true,
+        "visible": true,
+        "tooltip": "Specify the URL of the IBM Resilient server to connect and perform automated operations."
+      },
+      {
+        "title": "API Key",
+        "description": "Specify the API key to access the endpoint to connect and perform the automated operations",
+        "required": true,
+        "editable": true,
+        "visible": true,
+        "type": "password",
+        "name": "api_key",
+        "tooltip": "Specify the API key to access the endpoint to connect and perform the automated operations"
+      },
+      {
+        "title": "API Secret",
+        "description": "Specify the API Secret to access the endpoint to connect and perform the automated operations",
+        "required": true,
+        "editable": true,
+        "visible": true,
+        "type": "password",
+        "name": "api_secret",
+        "tooltip": "Specify the API Secret to access the endpoint to connect and perform the automated operations"
+      },
+      {
+        "title": "Organisation ID",
+        "description": "Specify the ID of the organisation to access the endpoint to connect and perform the automated operations",
+        "required": true,
+        "editable": true,
+        "visible": true,
+        "type": "text",
+        "name": "org_id",
+        "tooltip": "Specify the ID of the organisation to access the endpoint to connect and perform the automated operations"
+      },
+      {
+        "title": "Verify SSL",
+        "description": "Specifies whether the SSL certificate for the server is to be verified. By default, this option is set to True.",
+        "name": "verify_ssl",
+        "type": "checkbox",
+        "required": false,
+        "editable": true,
+        "visible": true,
+        "value": true,
+        "tooltip": "Specifies whether the SSL certificate for the server is to be verified. By default, this option is set to True."
+      }
+    ]
+  },
+  "operations": [
+    {
+      "operation": "create_incident",
+      "title": "Create Incident",
+      "description": "Creates a incident in IBM Security QRadar SOAR based on the incident name, and other input parameters that you have specified.",
+      "category": "investigation",
+      "annotation": "create_incident",
+      "enabled": true,
+      "parameters": [
+        {
+          "title": "Incident Name",
+          "name": "incident_name",
+          "description": "Specify a name of the incident to create in IBM Security QRadar SOAR.",
+          "type": "text",
+          "visible": true,
+          "editable": true,
+          "required": true,
+          "tooltip": "Specify a name of the incident to create in IBM Security QRadar SOAR."
+        },
+        {
+          "title": "Custom Properties",
+          "description": "(Optional) Specify the additional properties, in the JSON format, that you want to specify for the incident being created in IBM Security QRadar SOAR. The additional properties signify additional fields associated with the incident.",
+          "tooltip": "(Optional) Specify the additional properties, in the JSON format, that you want to specify for the incident being created in IBM Security QRadar SOAR. The additional properties signify additional fields associated with the incident.",
+          "type": "json",
+          "name": "additional_fields",
+          "required": false,
+          "visible": true,
+          "editable": true
+        }
+      ],
+      "output_schema": {}
+    },
+    {
+      "operation": "get_open_incidents",
+      "title": "Get Open Incidents",
+      "description": "Retrieves all open incidents from IBM Security QRadar SOAR.",
+      "category": "investigation",
+      "annotation": "get_open_incidents",
+      "enabled": true,
+      "parameters": [],
+      "output_schema": {}
+    },
+    {
+      "operation": "get_incident_details",
+      "title": "Get Incident Details",
+      "description": "Retrieves a specific incident from IBM Security QRadar SOAR based on the incident ID that you have specified.",
+      "category": "investigation",
+      "annotation": "get_incident_details",
+      "enabled": true,
+      "parameters": [
+        {
+          "title": "Incident ID",
+          "name": "incident_id",
+          "description": "Specify the incident ID to retrieve its details from IBM Security QRadar SOAR.",
+          "type": "text",
+          "visible": true,
+          "editable": true,
+          "required": true,
+          "tooltip": "Specify the incident ID to retrieve its details from IBM Security QRadar SOAR."
+        }
+      ],
+      "output_schema": {}
+    },
+    {
+      "operation": "update_incident",
+      "title": "Update Incident",
+      "description": "Updates an incident in IBM Security QRadar SOAR based on the incident ID, and other input parameters that you have specified.",
+      "category": "investigation",
+      "annotation": "update_incident",
+      "enabled": true,
+      "parameters": [
+        {
+          "title": "Incident ID",
+          "name": "incident_id",
+          "description": "Specify the ID of the incident to update in IBM Security QRadar SOAR.",
+          "type": "text",
+          "visible": true,
+          "editable": true,
+          "required": true,
+          "tooltip": "Specify the ID of the incident to update in IBM Security QRadar SOAR."
+        },
+        {
+          "title": "Incident Name",
+          "name": "name",
+          "description": "(Optional) Specify the name of the incident to update in IBM Security QRadar SOAR.",
+          "type": "text",
+          "visible": true,
+          "editable": true,
+          "required": false,
+          "tooltip": "(Optional) Specify the name of the incident to update in IBM Security QRadar SOAR."
+        },
+        {
+          "title": "Description",
+          "name": "description",
+          "description": "(Optional) Specify a description of the incident to update in IBM Security QRadar SOAR.",
+          "type": "text",
+          "visible": true,
+          "editable": true,
+          "required": false,
+          "tooltip": "(Optional) Specify a description of the incident to update in IBM Security QRadar SOAR."
+        },
+        {
+          "title": "Severity",
+          "name": "severity",
+          "description": "(Optional) Specify the severity of the incident to update in IBM Security QRadar SOAR. You can choose from the following options: Low, Medium, or High.",
+          "type": "select",
+          "visible": true,
+          "editable": true,
+          "required": false,
+          "tooltip": "(Optional) Specify the severity of the incident to update in IBM Security QRadar SOAR. You can choose from the following options: Low, Medium, or High.",
+          "options": [
+            "Low",
+            "Medium",
+            "High"
+          ]
+        },
+        {
+          "title": "Incident Type",
+          "name": "incident_type",
+          "description": "(Optional) Specify the type of the incident to update in IBM Security QRadar SOAR. You can choose from the following options: CommunicationError, DenialOfService, ImproperDisposal:DigitalAsset, etc.",
+          "type": "select",
+          "visible": true,
+          "editable": true,
+          "required": false,
+          "tooltip": "(Optional) Specify the type of the incident to update in IBM Security QRadar SOAR. You can choose from the following options: CommunicationError, DenialOfService, ImproperDisposal:DigitalAsset, etc.",
+          "options": [
+            "CommunicationError",
+            "DenialOfService",
+            "ImproperDisposal:DigitalAsset",
+            "ImproperDisposal:documents/files",
+            "LostDocuments/files/records",
+            "LostPC/laptop/tablet",
+            "LostPDA/smartphone",
+            "LostStorageDevice/media",
+            "Malware",
+            "NotAnIssue",
+            "Other",
+            "Phishing",
+            "StolenDocuments/files/records",
+            "StolenPC/laptop/tablet",
+            "StolenPDA/Smartphone",
+            "StolenStorageDevice/media",
+            "SystemIntrusion",
+            "TBD/Unknown",
+            "Vendor/3rdPartyError"
+          ]
+        },
+        {
+          "title": "NIST Attack Vectors",
+          "name": "nist",
+          "description": "(Optional) Specify the nist attack vectors to update in IBM Security QRadar SOAR. You can choose from the following options: Attrition, E-mail, External/RemovableMedia, etc.",
+          "type": "select",
+          "visible": true,
+          "editable": true,
+          "required": false,
+          "tooltip": "(Optional) Specify the nist attack vectors to update in IBM Security QRadar SOAR. You can choose from the following options: Attrition, E-mail, External/RemovableMedia, etc.",
+          "options": [
+            "Attrition",
+            "E-mail",
+            "External/RemovableMedia",
+            "Impersonation",
+            "ImproperUsage",
+            "Loss/TheftOfEquipment",
+            "Other",
+            "Web"
+          ]
+        },
+        {
+          "title": "Resolution",
+          "name": "resolution",
+          "description": "(Optional) Specify the resolution to update in IBM Security QRadar SOAR. You can choose from the following options: Unresolved, Duplicate, Not an Issue, or Resolved.",
+          "type": "select",
+          "visible": true,
+          "editable": true,
+          "required": false,
+          "tooltip": "(Optional) Specify the resolution to update in IBM Security QRadar SOAR. You can choose from the following options: Unresolved, Duplicate, Not an Issue, or Resolved.",
+          "options": [
+            "Unresolved",
+            "Duplicate",
+            "Not an Issue",
+            "Resolved"
+          ]
+        },
+        {
+          "title": "Resolution Summary",
+          "name": "resolution_summary",
+          "description": "(Optional) Specify a summary of the resolution to update in IBM Security QRadar SOAR.",
+          "type": "text",
+          "visible": true,
+          "editable": true,
+          "required": false,
+          "tooltip": "(Optional) Specify a summary of the resolution to update in IBM Security QRadar SOAR."
+        },
+        {
+          "title": "Custom Properties",
+          "description": "(Optional) Specify the additional properties, in the JSON format, that you want to specify for the incident being updated in IBM Security QRadar SOAR. The additional properties signify additional fields associated with the incident.",
+          "tooltip": "(Optional) Specify the additional properties, in the JSON format, that you want to specify for the incident being updated in IBM Security QRadar SOAR. The additional properties signify additional fields associated with the incident.",
+          "type": "json",
+          "name": "additional_fields",
+          "required": false,
+          "visible": true,
+          "editable": true
+        }
+      ],
+      "output_schema": {}
+    },
+    {
+      "operation": "close_incident",
+      "title": "Close Incident",
+      "description": "Closed an incident in IBM Security QRadar SOAR based on the incident ID you have specified.",
+      "category": "investigation",
+      "annotation": "close_incident",
+      "enabled": true,
+      "parameters": [
+        {
+          "title": "Incident ID",
+          "name": "incident_id",
+          "description": "Specify the ID of the incident to close in IBM Security QRadar SOAR.",
+          "type": "text",
+          "visible": true,
+          "editable": true,
+          "required": true,
+          "tooltip": "Specify the ID of the incident to close in IBM Security QRadar SOAR."
+        }
+      ],
+      "output_schema": {}
+    }
+  ]
+}
