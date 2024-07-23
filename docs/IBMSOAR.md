@@ -40,6 +40,7 @@ For the procedure to configure a connector, click [here](https://docs.fortinet.c
 ## Actions supported by the connector
 The following automated operations can be included in playbooks and you can also use the annotations to access operations from FortiSOAR&trade; release 4.10.0 and onwards:
 <table border=1><thead><tr><th>Function</th><th>Description</th><th>Annotation and Category</th></tr></thead><tbody><tr><td>Create Incident</td><td>Creates a incident in IBM Security QRadar SOAR based on the incident name, and other input parameters that you have specified.</td><td>create_incident <br/>Investigation</td></tr>
+<tr><td>Search Incidents</td><td>Retrieves all incidents from IBM Security QRadar SOAR based on the input parameters you have specified.</td><td>search_incidents <br/>Investigation</td></tr>
 <tr><td>Get Open Incidents</td><td>Retrieves all open incidents from IBM Security QRadar SOAR.</td><td>get_open_incidents <br/>Investigation</td></tr>
 <tr><td>Get Incident Details</td><td>Retrieves a specific incident from IBM Security QRadar SOAR based on the incident ID that you have specified.</td><td>get_incident_details <br/>Investigation</td></tr>
 <tr><td>Update Incident</td><td>Updates an incident in IBM Security QRadar SOAR based on the incident ID, and other input parameters that you have specified.</td><td>update_incident <br/>Investigation</td></tr>
@@ -51,6 +52,25 @@ The following automated operations can be included in playbooks and you can also
 <table border=1><thead><tr><th>Parameter</th><th>Description</th></tr></thead><tbody><tr><td>Incident Name</td><td>Specify a name of the incident to create in IBM Security QRadar SOAR.
 </td></tr><tr><td>Custom Properties</td><td>(Optional) Specify the additional properties, in the JSON format, that you want to specify for the incident being created in IBM Security QRadar SOAR. The additional properties signify additional fields associated with the incident.
 </td></tr></tbody></table>
+
+#### Output
+
+ The output contains a non-dictionary value.
+
+### operation: Search Incidents
+#### Input parameters
+<table border=1><thead><tr><th>Parameter</th><th>Description</th></tr></thead><tbody><tr><td>Severity</td><td>(Optional) Select the one or more severity of the incident based on which you want to retrieve incidents from IBM Security QRadar SOAR. You can choose from the following options: Low, Medium, or High.
+</td></tr><tr><td>Incident Type</td><td>(Optional) Specify the type of the incident based on which you want to retrieve incidents from IBM Security QRadar SOAR. You can choose from the following options: CommunicationError, DenialOfService, ImproperDisposal:DigitalAsset, etc.
+</td></tr><tr><td>NIST Attack Vectors</td><td>(Optional) Specify the nist attack vectors based on which you want to retrieve incidents from IBM Security QRadar SOAR. You can choose from the following options: Attrition, E-mail, External/RemovableMedia, etc.
+</td></tr><tr><td>Status</td><td>(Optional) Specify the status of the incident based on which you want to retrieve incidents from IBM Security QRadar SOAR. You can choose from the following options: Active or Closed.
+</td></tr><tr><td>Created After DateTime</td><td>(Optional) Select the DateTime using which you want to filter the result set to only include only those items that have been created after the specified timestamp.
+</td></tr><tr><td>Created Before DateTime</td><td>(Optional) Select the DateTime using which you want to filter the result set to only include only those items that have been created before the specified timestamp.
+</td></tr><tr><td>Created within the Last TimeFrame</td><td>(Optional) Specify the time frame to search within for incident. Should be given with "Occurred within the Last TimeFrame" and  "Due TimeFrame" parameters. Possible values are: Days, Hours, or Minutes.
+<br><strong>If you choose 'Days'</strong><ul><li>Created within Days: Specify the created date of the incident within the last time frame "Days".</li></ul><strong>If you choose 'Hours'</strong><ul><li>Created within Hours: Specify the created date of the incident within the last time frame "Hours".</li></ul><strong>If you choose 'Minutes'</strong><ul><li>Created within Minutes: Specify the created date of the incident within the last time frame "Minutes".</li></ul></td></tr><tr><td>Occurred After DateTime</td><td>(Optional) Select the DateTime using which you want to filter the result set to only include only those items that have been occurred after the specified timestamp.
+</td></tr><tr><td>Occurred Before</td><td>(Optional) Select the DateTime using which you want to filter the result set to only include only those items that have been occurred before the specified timestamp.
+</td></tr><tr><td>Occurred within the Last TimeFrame</td><td>(Optional) Specify the time frame to search within for incident. Possible values are: Days, Hours, or Minutes.
+<br><strong>If you choose 'Days'</strong><ul><li>Occurred within Days: Specify the occurred date of the incident within the last time frame "Days".</li></ul><strong>If you choose 'Hours'</strong><ul><li>Occurred within Hours: Specify the occurred date of the incident within the last time frame "Hours".</li></ul><strong>If you choose 'Minutes'</strong><ul><li>Occurred within Minutes: Specify the occurred date of the incident within the last time frame "Minutes".</li></ul></td></tr><tr><td>Due TimeFrame</td><td>(Optional) Specify the time frame to search within for incident. Possible values are: Days, Hours, or Minutes.
+<br><strong>If you choose 'Days'</strong><ul><li>Due within Days: Specify the due date of the incident in given time frame "Days".</li></ul><strong>If you choose 'Hours'</strong><ul><li>Due within Hours: Specify the due date of the incident in given time frame "Hours".</li></ul><strong>If you choose 'Minutes'</strong><ul><li>Due within Minutes: Specify the due date of the incident in given time frame "Minutes".</li></ul></td></tr></tbody></table>
 
 #### Output
 
@@ -105,6 +125,7 @@ The `Sample - ibm-security-qradar-soar - 1.0.0` playbook collection comes bundle
 - Create Incident
 - Get Incident Details
 - Get Open Incidents
+- Search Incidents
 - Update Incident
 
 **Note**: If you are planning to use any of the sample playbooks in your environment, ensure that you clone those playbooks and move them to a different collection since the sample playbook collection gets deleted during connector upgrade and delete.

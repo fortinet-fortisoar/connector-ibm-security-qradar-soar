@@ -99,6 +99,296 @@
       "output_schema": {}
     },
     {
+      "operation": "search_incidents",
+      "title": "Search Incidents",
+      "description": "Retrieves all incidents from IBM Security QRadar SOAR based on the input parameters you have specified.",
+      "category": "investigation",
+      "annotation": "search_incidents",
+      "enabled": true,
+      "parameters": [
+        {
+          "title": "Severity",
+          "name": "severity",
+          "description": "(Optional) Select the one or more severity of the incident based on which you want to retrieve incidents from IBM Security QRadar SOAR. You can choose from the following options: Low, Medium, or High.",
+          "type": "multiselect",
+          "visible": true,
+          "editable": true,
+          "required": false,
+          "tooltip": "(Optional) Select the one or more severity of the incident based on which you want to retrieve incidents from IBM Security QRadar SOAR. You can choose from the following options: Low, Medium, or High.",
+          "options": [
+            "Low",
+            "Medium",
+            "High"
+          ]
+        },
+        {
+          "title": "Incident Type",
+          "name": "incident_type",
+          "description": "(Optional) Specify the type of the incident based on which you want to retrieve incidents from IBM Security QRadar SOAR. You can choose from the following options: CommunicationError, DenialOfService, ImproperDisposal:DigitalAsset, etc.",
+          "type": "select",
+          "visible": true,
+          "editable": true,
+          "required": false,
+          "tooltip": "(Optional) Specify the type of the incident based on which you want to retrieve incidents from IBM Security QRadar SOAR. You can choose from the following options: CommunicationError, DenialOfService, ImproperDisposal:DigitalAsset, etc.",
+          "options": [
+            "CommunicationError",
+            "DenialOfService",
+            "ImproperDisposal:DigitalAsset",
+            "ImproperDisposal:documents/files",
+            "LostDocuments/files/records",
+            "LostPC/laptop/tablet",
+            "LostPDA/smartphone",
+            "LostStorageDevice/media",
+            "Malware",
+            "NotAnIssue",
+            "Other",
+            "Phishing",
+            "StolenDocuments/files/records",
+            "StolenPC/laptop/tablet",
+            "StolenPDA/Smartphone",
+            "StolenStorageDevice/media",
+            "SystemIntrusion",
+            "TBD/Unknown",
+            "Vendor/3rdPartyError"
+          ]
+        },
+        {
+          "title": "NIST Attack Vectors",
+          "name": "nist",
+          "description": "(Optional) Specify the nist attack vectors based on which you want to retrieve incidents from IBM Security QRadar SOAR. You can choose from the following options: Attrition, E-mail, External/RemovableMedia, etc.",
+          "type": "select",
+          "visible": true,
+          "editable": true,
+          "required": false,
+          "tooltip": "(Optional) Specify the nist attack vectors based on which you want to retrieve incidents from IBM Security QRadar SOAR. You can choose from the following options: Attrition, E-mail, External/RemovableMedia, etc.",
+          "options": [
+            "Attrition",
+            "E-mail",
+            "External/RemovableMedia",
+            "Impersonation",
+            "ImproperUsage",
+            "Loss/TheftOfEquipment",
+            "Other",
+            "Web"
+          ]
+        },
+        {
+          "title": "Status",
+          "name": "status",
+          "description": "(Optional) Specify the status of the incident based on which you want to retrieve incidents from IBM Security QRadar SOAR. You can choose from the following options: Active or Closed.",
+          "type": "select",
+          "visible": true,
+          "editable": true,
+          "required": false,
+          "tooltip": "(Optional) Specify the status of the incident based on which you want to retrieve incidents from IBM Security QRadar SOAR. You can choose from the following options: Active or Closed.",
+          "options": [
+            "Active",
+            "Closed"
+          ]
+        },
+        {
+          "title": "Created After DateTime",
+          "description": "(Optional) Select the DateTime using which you want to filter the result set to only include only those items that have been created after the specified timestamp.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "type": "datetime",
+          "name": "date_created_after",
+          "tooltip": "(Optional) Select the DateTime using which you want to filter the result set to only include only those items that have been created after the specified timestamp."
+        },
+        {
+          "title": "Created Before DateTime",
+          "description": "(Optional) Select the DateTime using which you want to filter the result set to only include only those items that have been created before the specified timestamp.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "type": "datetime",
+          "name": "date_created_before",
+          "tooltip": "(Optional) Select the DateTime using which you want to filter the result set to only include only those items that have been created before the specified timestamp."
+        },
+        {
+          "title": "Created within the Last TimeFrame",
+          "description": "(Optional) Specify the time frame to search within for incident. Should be given with \"Occurred within the Last TimeFrame\" and  \"Due TimeFrame\" parameters. Possible values are: Days, Hours, or Minutes.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "type": "select",
+          "name": "created_timeframe",
+          "options": [
+            "Days",
+            "Hours",
+            "Minutes"
+          ],
+          "tooltip": "(Optional) Specify the time frame to search within for incident. Should be given with \"Occurred within the Last TimeFrame\" and  \"Due TimeFrame\" parameters. Possible values are: Days, Hours, or Minutes.",
+          "onchange": {
+            "Days": [
+              {
+                "title": "Created within Days",
+                "description": "Specify the created date of the incident within the last time frame \"Days\".",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "type": "integer",
+                "name": "date_created_within_the_last",
+                "tooltip": "Specify the created date of the incident within the last time frame \"Days\"."
+              }
+            ],
+            "Hours": [
+              {
+                "title": "Created within Hours",
+                "description": "Specify the created date of the incident within the last time frame \"Hours\".",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "type": "integer",
+                "name": "date_created_within_the_last",
+                "tooltip": "Specify the created date of the incident within the last time frame \"Hours\"."
+              }
+            ],
+            "Minutes": [
+              {
+                "title": "Created within Minutes",
+                "description": "Specify the created date of the incident within the last time frame \"Minutes\".",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "type": "integer",
+                "name": "date_created_within_the_last",
+                "tooltip": "Specify the created date of the incident within the last time frame \"Minutes\""
+              }
+            ]
+          }
+        },
+        {
+          "title": "Occurred After DateTime",
+          "description": "(Optional) Select the DateTime using which you want to filter the result set to only include only those items that have been occurred after the specified timestamp.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "type": "datetime",
+          "name": "date_occurred_after",
+          "tooltip": "(Optional) Select the DateTime using which you want to filter the result set to only include only those items that have been occurred after the specified timestamp."
+        },
+        {
+          "title": "Occurred Before",
+          "description": "(Optional) Select the DateTime using which you want to filter the result set to only include only those items that have been occurred before the specified timestamp.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "type": "datetime",
+          "name": "date_occurred_before",
+          "tooltip": "(Optional) Select the DateTime using which you want to filter the result set to only include only those items that have been occurred before the specified timestamp."
+        },
+        {
+          "title": "Occurred within the Last TimeFrame",
+          "description": "(Optional) Specify the time frame to search within for incident. Possible values are: Days, Hours, or Minutes.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "type": "select",
+          "name": "occurred_timeframe",
+          "options": [
+            "Days",
+            "Hours",
+            "Minutes"
+          ],
+          "tooltip": "(Optional) Specify the time frame to search within for incident. Possible values are: Days, Hours, or Minutes.",
+          "onchange": {
+            "Days": [
+              {
+                "title": "Occurred within Days",
+                "description": "Specify the occurred date of the incident within the last time frame \"Days\".",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "type": "integer",
+                "name": "date_occurred_within_the_last",
+                "tooltip": "Specify the occurred date of the incident within the last time frame \"Days\"."
+              }
+            ],
+            "Hours": [
+              {
+                "title": "Occurred within Hours",
+                "description": "Specify the occurred date of the incident within the last time frame \"Hours\".",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "type": "integer",
+                "name": "date_occurred_within_the_last",
+                "tooltip": "Specify the occurred date of the incident within the last time frame \"Hours\"."
+              }
+            ],
+            "Minutes": [
+              {
+                "title": "Occurred within Minutes",
+                "description": "Specify the occurred date of the incident within the last time frame \"Minutes\".",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "type": "integer",
+                "name": "date_occurred_within_the_last",
+                "tooltip": "Specify the occurred date of the incident within the last time frame \"Minutes\"."
+              }
+            ]
+          }
+        },
+        {
+          "title": "Due TimeFrame",
+          "description": "(Optional) Specify the time frame to search within for incident. Possible values are: Days, Hours, or Minutes.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "type": "select",
+          "name": "due_timeframe",
+          "options": [
+            "Days",
+            "Hours",
+            "Minutes"
+          ],
+          "tooltip": "(Optional) Specify the time frame to search within for incident. Possible values are: Days, Hours, or Minutes.",
+          "onchange": {
+            "Days": [
+              {
+                "title": "Due within Days",
+                "description": "Specify the due date of the incident in given time frame \"Days\".",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "type": "integer",
+                "name": "due_in",
+                "tooltip": "Specify the due date of the incident in given time frame \"Days\"."
+              }
+            ],
+            "Hours": [
+              {
+                "title": "Due within Hours",
+                "description": "Specify the due date of the incident in given time frame \"Hours\".",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "type": "integer",
+                "name": "due_in",
+                "tooltip": "Specify the due date of the incident in given time frame \"Hours\"."
+              }
+            ],
+            "Minutes": [
+              {
+                "title": "Due within Minutes",
+                "description": "Specify the due date of the incident in given time frame \"Minutes\".",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "type": "integer",
+                "name": "due_in",
+                "tooltip": "Specify the due date of the incident in given time frame \"Minutes\"."
+              }
+            ]
+          }
+        }
+      ],
+      "output_schema": {}
+    },
+    {
       "operation": "get_open_incidents",
       "title": "Get Open Incidents",
       "description": "Retrieves all open incidents from IBM Security QRadar SOAR.",
