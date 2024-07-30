@@ -32,7 +32,7 @@ For the procedure to configure a connector, click [here](https://docs.fortinet.c
 </td>
 </tr><tr><td>API Secret</td><td>Specify the API Secret to access the endpoint to connect and perform the automated operations
 </td>
-</tr><tr><td>Organisation ID</td><td>Specify the ID of the organisation to access the endpoint to connect and perform the automated operations
+</tr><tr><td>Organization ID</td><td>Specify the ID of the organization to access the endpoint to connect and perform the automated operations
 </td>
 </tr><tr><td>Verify SSL</td><td>Specifies whether the SSL certificate for the server is to be verified or not. <br/>By default, this option is set to True.</td></tr>
 </tbody></table>
