@@ -44,14 +44,14 @@
         "tooltip": "Specify the API Secret to access the endpoint to connect and perform the automated operations"
       },
       {
-        "title": "Organisation ID",
-        "description": "Specify the ID of the organisation to access the endpoint to connect and perform the automated operations",
+        "title": "Organization ID",
+        "description": "Specify the ID of the organization to access the endpoint to connect and perform the automated operations",
         "required": true,
         "editable": true,
         "visible": true,
         "type": "text",
         "name": "org_id",
-        "tooltip": "Specify the ID of the organisation to access the endpoint to connect and perform the automated operations"
+        "tooltip": "Specify the ID of the organization to access the endpoint to connect and perform the automated operations"
       },
       {
         "title": "Verify SSL",
