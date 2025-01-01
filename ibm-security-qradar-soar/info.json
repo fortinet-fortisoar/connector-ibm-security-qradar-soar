@@ -764,100 +764,14 @@
       "enabled": true,
       "parameters": [
         {
-          "title": "Include Records",
-          "name": "include_records_total",
-          "description": "Select to include or exclude total count of the incidents that match the given filters in the response. This is set to true by default.",
-          "type": "checkbox",
-          "visible": true,
-          "editable": true,
-          "required": false,
-          "tooltip": "Select to include or exclude total count of the incidents that match the given filters in the response. This is set to true by default.",
-          "value": true
-        },
-        {
-          "title": "Return Level",
-          "name": "return_level",
-          "description": "Select the incident data structure returned. Possible values are partial, normal, or full.",
-          "type": "select",
-          "visible": true,
-          "editable": true,
-          "required": false,
-          "tooltip": "Select the incident data structure returned. Possible values are partial, normal, or full.",
-          "options": [
-            "partial",
-            "normal",
-            "full"
-          ]
-        },
-        {
-          "title": "Field Handle",
-          "name": "field_handle",
-          "description": "Specify the list of custom fields returned with the incident data.",
-          "type": "text",
-          "visible": true,
-          "editable": true,
-          "required": false,
-          "tooltip": "Specify the list of custom fields returned with the incident data."
-        },
-        {
-          "title": "Start",
-          "name": "start",
-          "description": "",
-          "type": "integer",
-          "visible": true,
-          "editable": true,
-          "required": false,
-          "tooltip": ""
-        },
-        {
-          "title": "Length",
-          "name": "length",
-          "description": "",
-          "type": "integer",
-          "visible": true,
-          "editable": true,
-          "required": false,
-          "tooltip": ""
-        },
-        {
-          "title": "Records Total",
-          "name": "recordsTotal",
-          "description": "",
-          "type": "integer",
-          "visible": true,
-          "editable": true,
-          "required": false,
-          "tooltip": ""
-        },
-        {
-          "title": "Sorts",
-          "name": "sorts",
-          "description": "Specify the sorts to use for the query.",
-          "type": "json",
-          "visible": true,
-          "editable": true,
-          "required": false,
-          "tooltip": "Specify the sorts to use for the query.",
-          "value": [
-            {
-              "field_name": "",
-              "type": "",
-              "type_handle": {
-                "name": "",
-                "id": {}
-              }
-            }
-          ]
-        },
-        {
           "title": "Filters",
           "name": "filters",
-          "description": "Specify the filters to use for the query.",
+          "description": "Specify the filters to apply in the query to retrieve filtered records from IBM Security QRadar SOAR.",
           "type": "json",
           "visible": true,
           "editable": true,
           "required": false,
-          "tooltip": "Specify the filters to use for the query.",
+          "tooltip": "Specify the filters to apply in the query to retrieve filtered records from IBM Security QRadar SOAR.",
           "value": [
             {
               "conditions": [
@@ -879,6 +793,92 @@
           ]
         },
         {
+          "title": "Include Records",
+          "name": "include_records_total",
+          "description": "Select to include or exclude total count of the incidents that match the given filters in the response. This is set to true by default.",
+          "type": "checkbox",
+          "visible": true,
+          "editable": true,
+          "required": false,
+          "tooltip": "Select to include or exclude total count of the incidents that match the given filters in the response. This is set to true by default.",
+          "value": true
+        },
+        {
+          "title": "Return Level",
+          "name": "return_level",
+          "description": "Select the incident data structure returned. Possible values are Partial, Normal, or Full.",
+          "type": "select",
+          "visible": true,
+          "editable": true,
+          "required": false,
+          "tooltip": "Select the incident data structure returned. Possible values are Partial, Normal, or Full.",
+          "options": [
+            "Partial",
+            "Normal",
+            "Full"
+          ]
+        },
+        {
+          "title": "Field Handle",
+          "name": "field_handle",
+          "description": "Specify the list of custom fields returned with the incident data.",
+          "type": "text",
+          "visible": true,
+          "editable": true,
+          "required": false,
+          "tooltip": "Specify the list of custom fields returned with the incident data."
+        },
+        {
+          "title": "Length",
+          "name": "length",
+          "description": "The maximum number of records to return in the response. Possible values are: Null or any value less than 1 to retrieve all records, up to the server-configured maximum limit. If the value is greater than 0 and exceeds the server-configured limit, an error will be thrown.",
+          "type": "integer",
+          "visible": true,
+          "editable": true,
+          "required": false,
+          "tooltip": "The maximum number of records to return in the response. Possible values are: Null or any value less than 1 to retrieve all records, up to the server-configured maximum limit. If the value is greater than 0 and exceeds the server-configured limit, an error will be thrown."
+        },
+        {
+          "title": "Start",
+          "name": "start",
+          "description": "Specify the paging to retrieve the first indicator record from IBM Security QRadar SOAR.",
+          "type": "integer",
+          "visible": true,
+          "editable": true,
+          "required": false,
+          "tooltip": "Specify the paging to retrieve the first indicator record from IBM Security QRadar SOAR."
+        },
+        {
+          "title": "Records Total",
+          "name": "recordsTotal",
+          "description": "The total number of records to be fetched for the current query from IBM Security QRadar SOAR.",
+          "type": "integer",
+          "visible": true,
+          "editable": true,
+          "required": false,
+          "tooltip": "The total number of records to be fetched for the current query from IBM Security QRadar SOAR."
+        },
+        {
+          "title": "Sorts",
+          "name": "sorts",
+          "description": "Specify the sorts to apply in the query to retrieve filtered records from IBM Security QRadar SOAR.",
+          "type": "json",
+          "visible": true,
+          "editable": true,
+          "required": false,
+          "tooltip": "Specify the sorts to apply in the query to retrieve filtered records from IBM Security QRadar SOAR.",
+          "value": [
+            {
+              "field_name": "",
+              "type": "",
+              "type_handle": {
+                "name": "",
+                "id": {}
+              }
+            }
+          ]
+        },
+        {
           "title": "Logic Type",
           "name": "logic_type",
           "description": "Specify the logic type to apply to these filters. Defaults to ANY if logic type is not specified.",
@@ -888,8 +888,8 @@
           "required": false,
           "tooltip": "Specify the logic type to apply to these filters. Defaults to ANY if logic type is not specified.",
           "options": [
-            "all",
-            "any"
+            "ALL",
+            "ANY"
           ]
         }
       ],
@@ -1076,6 +1076,284 @@
         }
       ],
       "output_schema": {}
+    },
+    {
+      "title": "Get Incident Artifacts",
+      "operation": "get_incident_artifacts",
+      "category": "investigation",
+      "annotation": "get_incident_artifacts",
+      "enabled": true,
+      "description": "Retrieves all artifacts that are associated with an incidents from IBM Security QRadar SOAR based on the input parameters you have specified.",
+      "parameters": [
+        {
+          "title": "Incident ID",
+          "description": "Specify the ID of the incident to retrieve it's artifacts from IBM Security QRadar SOAR.",
+          "type": "text",
+          "name": "incident_id",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the ID of the incident to retrieve it's artifacts from IBM Security QRadar SOAR."
+        },
+        {
+          "title": "Filters",
+          "description": "Specify the filters to apply in the query to retrieve filtered records from IBM Security QRadar SOAR.",
+          "type": "json",
+          "name": "filters",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "value": [
+            {
+              "conditions": [
+                {
+                  "method": "",
+                  "field_name": "",
+                  "value": {},
+                  "value_type": "",
+                  "type": "",
+                  "evaluation_id": ""
+                }
+              ],
+              "logic_type": "",
+              "type_handle": {
+                "name": "",
+                "id": {}
+              }
+            }
+          ],
+          "tooltip": "Specify the filters to apply in the query to retrieve filtered records from IBM Security QRadar SOAR."
+        },
+        {
+          "title": "Include Records",
+          "description": "Select to include or exclude total count of the incidents that match the given filters in the response. This is set to true by default.",
+          "type": "checkbox",
+          "name": "include_records_total",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "value": true,
+          "tooltip": "Select to include or exclude total count of the incidents that match the given filters in the response. This is set to true by default."
+        },
+        {
+          "title": "Return Level",
+          "description": "Select the incident data structure returned. Possible values are Partial, Normal, or Full.",
+          "type": "select",
+          "name": "return_level",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Select the incident data structure returned. Possible values are Partial, Normal, or Full.",
+          "options": [
+            "Partial",
+            "Normal",
+            "Full"
+          ]
+        },
+        {
+          "title": "Field Handle",
+          "description": "Specify the list of custom fields returned with the incident data.",
+          "type": "text",
+          "name": "field_handle",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the list of custom fields returned with the incident data."
+        },
+        {
+          "title": "Start",
+          "description": "Specify the paging to retrieve the first indicator record from IBM Security QRadar SOAR.",
+          "type": "integer",
+          "name": "start",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the paging to retrieve the first indicator record from IBM Security QRadar SOAR."
+        },
+        {
+          "title": "Length",
+          "description": "The maximum number of records to return in the response. Possible values are: Null or any value less than 1 to retrieve all records, up to the server-configured maximum limit. If the value is greater than 0 and exceeds the server-configured limit, an error will be thrown.",
+          "type": "integer",
+          "name": "length",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "The maximum number of records to return in the response. Possible values are: Null or any value less than 1 to retrieve all records, up to the server-configured maximum limit. If the value is greater than 0 and exceeds the server-configured limit, an error will be thrown."
+        },
+        {
+          "title": "Records Total",
+          "description": "The total number of records to be fetched for the current query from IBM Security QRadar SOAR.",
+          "type": "integer",
+          "name": "recordsTotal",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "The total number of records to be fetched for the current query from IBM Security QRadar SOAR."
+        },
+        {
+          "title": "Sorts",
+          "description": "Specify the sorts to apply in the query to retrieve filtered records from IBM Security QRadar SOAR.",
+          "type": "json",
+          "name": "sorts",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "value": [
+            {
+              "field_name": "",
+              "type": "",
+              "type_handle": {
+                "name": "",
+                "id": {}
+              }
+            }
+          ],
+          "tooltip": "Specify the sorts to apply in the query to retrieve filtered records from IBM Security QRadar SOAR."
+        },
+        {
+          "title": "Logic Type",
+          "description": "Specify the logic type to apply to these filters. Defaults to ANY if logic type is not specified.",
+          "type": "select",
+          "name": "logic_type",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the logic type to apply to these filters. Defaults to ANY if logic type is not specified.",
+          "options": [
+            "ALL",
+            "ANY"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Get Incident Notes",
+      "operation": "get_incident_notes",
+      "category": "investigation",
+      "annotation": "get_incident_notes",
+      "enabled": true,
+      "description": "Retrieves all the notes associated with an incident from IBM Security QRadar SOAR based on the incident ID that you have specified.",
+      "parameters": [
+        {
+          "title": "Incident ID",
+          "description": "Specify the ID of the incident to retrieve notes from IBM Security QRadar SOAR.",
+          "type": "text",
+          "name": "incident_id",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the ID of the incident to retrieve notes from IBM Security QRadar SOAR."
+        }
+      ]
+    },
+    {
+      "title": "Get Incident Attachments",
+      "operation": "get_incident_attachments",
+      "category": "investigation",
+      "annotation": "get_incident_attachments",
+      "enabled": true,
+      "description": "Retrieves all the attachments associated with an incident from IBM Security QRadar SOAR based on the incident ID that you have specified.",
+      "parameters": [
+        {
+          "title": "Incident ID",
+          "description": "Specify the ID of the incident to retrieve attachments from IBM Security QRadar SOAR.",
+          "type": "text",
+          "name": "incident_id",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the ID of the incident to retrieve attachments from IBM Security QRadar SOAR."
+        }
+      ]
+    },
+    {
+      "title": "Get Incident Attachment Details",
+      "operation": "get_incident_attachment_details",
+      "category": "investigation",
+      "annotation": "get_incident_attachment_details",
+      "enabled": true,
+      "description": "Retrieves all the attachment details associated with an incident from IBM Security QRadar SOAR based on the incident ID that you have specified.",
+      "parameters": [
+        {
+          "title": "Incident ID",
+          "description": "Specify the ID of the incident to retrieve attachments from IBM Security QRadar SOAR.",
+          "type": "text",
+          "name": "incidentID",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the ID of the incident to retrieve attachments from IBM Security QRadar SOAR."
+        }
+      ]
+    },
+    {
+      "title": "Get All Incident Details",
+      "operation": "get_all_incident_details",
+      "category": "investigation",
+      "annotation": "get_all_incident_details",
+      "enabled": true,
+      "description": "Retrieves all details associated with an incident from IBM Security QRadar SOAR based on the incident ID that you have specified.",
+      "parameters": [
+        {
+          "title": "Incident ID",
+          "description": "Specify the ID of the incident to retrieve it's details from IBM Security QRadar SOAR.",
+          "type": "text",
+          "name": "incidentID",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the ID of the incident to retrieve it's details from IBM Security QRadar SOAR."
+        },
+        {
+          "title": "Filters",
+          "description": "Specify the filters to apply in the query to retrieve filtered records from IBM Security QRadar SOAR.",
+          "type": "json",
+          "name": "filters",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "value": [
+            {
+              "conditions": [
+                {
+                  "method": "",
+                  "field_name": "",
+                  "value": {},
+                  "value_type": "",
+                  "type": "",
+                  "evaluation_id": ""
+                }
+              ],
+              "logic_type": "",
+              "type_handle": {
+                "name": "",
+                "id": {}
+              }
+            }
+          ],
+          "tooltip": "Specify the filters to apply in the query to retrieve filtered records from IBM Security QRadar SOAR."
+        },
+        {
+          "title": "Start",
+          "description": "Specify the paging to retrieve the first indicator record from IBM Security QRadar SOAR.",
+          "type": "integer",
+          "name": "start",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the paging to retrieve the first indicator record from IBM Security QRadar SOAR."
+        },
+        {
+          "title": "Length",
+          "description": "The maximum number of records to return in the response. Possible values are: Null or any value less than 1 to retrieve all records, up to the server-configured maximum limit. If the value is greater than 0 and exceeds the server-configured limit, an error will be thrown.",
+          "type": "integer",
+          "name": "length",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "The maximum number of records to return in the response. Possible values are: Null or any value less than 1 to retrieve all records, up to the server-configured maximum limit. If the value is greater than 0 and exceeds the server-configured limit, an error will be thrown."
+        }
+      ]
     }
   ]
 }

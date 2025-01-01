@@ -4,12 +4,17 @@ IBM Security QRadar SOAR is a software platform designed to help organizations m
 
 ### Version information
 
-Connector Version: 1.0.0
+Connector Version: 1.1.0
 
 
 Authored By: Fortinet
 
 Certified: No
+## Release Notes for version 1.1.0
+Following enhancements have been made to the IBM Security QRadar SOAR Connector in version 1.1.0:
+<ul>
+<li>The previous connector version 1.0.0, which used deprecated REST APIs of IBM Security QRadar SOAR, has been re-developed to support the new APIs.</li>
+</ul>
 
 ## Installing the connector
 <p>Use the <strong>Content Hub</strong> to install the connector. For the detailed procedure to install a connector, click <a href="https://docs.fortinet.com/document/fortisoar/0.0.0/installing-a-connector/1/installing-a-connector" target="_top">here</a>.</p><p>You can also use the <code>yum</code> command as a root user to install the connector:</p>
@@ -41,15 +46,32 @@ For the procedure to configure a connector, click [here](https://docs.fortinet.c
 The following automated operations can be included in playbooks and you can also use the annotations to access operations from FortiSOAR&trade; release 4.10.0 and onwards:
 <table border=1><thead><tr><th>Function</th><th>Description</th><th>Annotation and Category</th></tr></thead><tbody><tr><td>Create Incident</td><td>Creates a incident in IBM Security QRadar SOAR based on the incident name, and other input parameters that you have specified.</td><td>create_incident <br/>Investigation</td></tr>
 <tr><td>Search Incidents</td><td>Retrieves all incidents from IBM Security QRadar SOAR based on the input parameters you have specified.</td><td>search_incidents <br/>Investigation</td></tr>
-<tr><td>Get Open Incidents</td><td>Retrieves all open incidents from IBM Security QRadar SOAR.</td><td>get_open_incidents <br/>Investigation</td></tr>
+<tr><td>Get Incidents Simulations</td><td>Retrieve a list of simulations from IBM Security QRadar SOAR.</td><td>get_incident_simulations <br/>Investigation</td></tr>
 <tr><td>Get Incident Details</td><td>Retrieves a specific incident from IBM Security QRadar SOAR based on the incident ID that you have specified.</td><td>get_incident_details <br/>Investigation</td></tr>
+<tr><td>Get Incident Tasks</td><td>Retrieve a list of tasks for the incident from IBM Security QRadar SOAR.</td><td>get_incident_tasks <br/>Investigation</td></tr>
 <tr><td>Update Incident</td><td>Updates an incident in IBM Security QRadar SOAR based on the incident ID, and other input parameters that you have specified.</td><td>update_incident <br/>Investigation</td></tr>
 <tr><td>Close Incident</td><td>Closed an incident in IBM Security QRadar SOAR based on the incident ID you have specified.</td><td>close_incident <br/>Investigation</td></tr>
+<tr><td>Get Incident Artifacts</td><td>Retrieves all artifacts that are associated with an incidents from IBM Security QRadar SOAR based on the input parameters you have specified.</td><td>get_incident_artifacts <br/>Investigation</td></tr>
+<tr><td>Get Incident Notes</td><td>Retrieves all the notes associated with an incident from IBM Security QRadar SOAR based on the incident ID that you have specified.</td><td>get_incident_notes <br/>Investigation</td></tr>
+<tr><td>Get Incident Attachments</td><td>Retrieves all the attachments associated with an incident from IBM Security QRadar SOAR based on the incident ID that you have specified.</td><td>get_incident_attachments <br/>Investigation</td></tr>
+<tr><td>Get Incident Attachment Details</td><td>Retrieves all the attachment details associated with an incident from IBM Security QRadar SOAR based on the incident ID that you have specified.</td><td>get_incident_attachment_details <br/>Investigation</td></tr>
+<tr><td>Get All Incident Details</td><td>Retrieves all details associated with an incident from IBM Security QRadar SOAR based on the incident ID that you have specified.</td><td>get_all_incident_details <br/>Investigation</td></tr>
 </tbody></table>
 
 ### operation: Create Incident
 #### Input parameters
 <table border=1><thead><tr><th>Parameter</th><th>Description</th></tr></thead><tbody><tr><td>Incident Name</td><td>Specify a name of the incident to create in IBM Security QRadar SOAR.
+</td></tr><tr><td>Discovered Date</td><td>Specify the discovered date of the incident to create in IBM Security QRadar SOAR.
+</td></tr><tr><td>Description</td><td>Specify a description of the incident to create in IBM Security QRadar SOAR.
+</td></tr><tr><td>Include Full Data</td><td>If false an incidentDTO is returned instead of the default fullIncidentDataDTO. The fullIncidentDataDTO contains everything about the incident. The incidentDTO will contain just a high level details.
+</td></tr><tr><td>Include Tasks Property</td><td>If true the fullIncidentDataDTO tasks property gets filled in also. The default is false. Note that this parameter is ignored if "Include Full Data" is false.
+</td></tr><tr><td>Incident Data Types</td><td>Specify the information about the types of data that were lost (e.g First Name, Last Name, Credit card number, etc.)
+</td></tr><tr><td>Record Counts</td><td>Specify the information about the counts of records that were lost for the different geographical regions.
+</td></tr><tr><td>Regulators</td><td>Specify the information about the regulators that are in effect for the incident. Note that the ids property of the regulatorsDTO contains non-state/province regulators. So for example, you'd include the ID of the "GLB Act" regulator here. State regulators will be used if record counts are specified for that state.
+</td></tr><tr><td>Hipaa</td><td>Specify the  information required by HIPAA. If HIPAA does not apply to this incident then the hipaa propert can be empty.
+</td></tr><tr><td>Artifacts</td><td>Specify the list of tasks for the incident.
+</td></tr><tr><td>Findings</td><td>Specify the list of findings for the incident.
+</td></tr><tr><td>Comments</td><td>Specify the some notes for the incident.
 </td></tr><tr><td>Custom Properties</td><td>(Optional) Specify the additional properties, in the JSON format, that you want to specify for the incident being created in IBM Security QRadar SOAR. The additional properties signify additional fields associated with the incident.
 </td></tr></tbody></table>
 
@@ -59,26 +81,25 @@ The following automated operations can be included in playbooks and you can also
 
 ### operation: Search Incidents
 #### Input parameters
-<table border=1><thead><tr><th>Parameter</th><th>Description</th></tr></thead><tbody><tr><td>Severity</td><td>(Optional) Select the one or more severity of the incident based on which you want to retrieve incidents from IBM Security QRadar SOAR. You can choose from the following options: Low, Medium, or High.
-</td></tr><tr><td>Incident Type</td><td>(Optional) Specify the type of the incident based on which you want to retrieve incidents from IBM Security QRadar SOAR. You can choose from the following options: CommunicationError, DenialOfService, ImproperDisposal:DigitalAsset, etc.
-</td></tr><tr><td>NIST Attack Vectors</td><td>(Optional) Specify the nist attack vectors based on which you want to retrieve incidents from IBM Security QRadar SOAR. You can choose from the following options: Attrition, E-mail, External/RemovableMedia, etc.
-</td></tr><tr><td>Status</td><td>(Optional) Specify the status of the incident based on which you want to retrieve incidents from IBM Security QRadar SOAR. You can choose from the following options: Active or Closed.
-</td></tr><tr><td>Created After DateTime</td><td>(Optional) Select the DateTime using which you want to filter the result set to only include only those items that have been created after the specified timestamp.
-</td></tr><tr><td>Created Before DateTime</td><td>(Optional) Select the DateTime using which you want to filter the result set to only include only those items that have been created before the specified timestamp.
-</td></tr><tr><td>Created within the Last TimeFrame</td><td>(Optional) Specify the time frame to search within for incident. Should be given with "Occurred within the Last TimeFrame" and  "Due TimeFrame" parameters. Possible values are: Days, Hours, or Minutes.
-<br><strong>If you choose 'Days'</strong><ul><li>Created within Days: Specify the created date of the incident within the last time frame "Days".</li></ul><strong>If you choose 'Hours'</strong><ul><li>Created within Hours: Specify the created date of the incident within the last time frame "Hours".</li></ul><strong>If you choose 'Minutes'</strong><ul><li>Created within Minutes: Specify the created date of the incident within the last time frame "Minutes".</li></ul></td></tr><tr><td>Occurred After DateTime</td><td>(Optional) Select the DateTime using which you want to filter the result set to only include only those items that have been occurred after the specified timestamp.
-</td></tr><tr><td>Occurred Before</td><td>(Optional) Select the DateTime using which you want to filter the result set to only include only those items that have been occurred before the specified timestamp.
-</td></tr><tr><td>Occurred within the Last TimeFrame</td><td>(Optional) Specify the time frame to search within for incident. Possible values are: Days, Hours, or Minutes.
-<br><strong>If you choose 'Days'</strong><ul><li>Occurred within Days: Specify the occurred date of the incident within the last time frame "Days".</li></ul><strong>If you choose 'Hours'</strong><ul><li>Occurred within Hours: Specify the occurred date of the incident within the last time frame "Hours".</li></ul><strong>If you choose 'Minutes'</strong><ul><li>Occurred within Minutes: Specify the occurred date of the incident within the last time frame "Minutes".</li></ul></td></tr><tr><td>Due TimeFrame</td><td>(Optional) Specify the time frame to search within for incident. Possible values are: Days, Hours, or Minutes.
-<br><strong>If you choose 'Days'</strong><ul><li>Due within Days: Specify the due date of the incident in given time frame "Days".</li></ul><strong>If you choose 'Hours'</strong><ul><li>Due within Hours: Specify the due date of the incident in given time frame "Hours".</li></ul><strong>If you choose 'Minutes'</strong><ul><li>Due within Minutes: Specify the due date of the incident in given time frame "Minutes".</li></ul></td></tr></tbody></table>
+<table border=1><thead><tr><th>Parameter</th><th>Description</th></tr></thead><tbody><tr><td>Filters</td><td>Specify the filters to apply in the query to retrieve filtered records from IBM Security QRadar SOAR.
+</td></tr><tr><td>Include Records</td><td>Select to include or exclude total count of the incidents that match the given filters in the response. This is set to true by default.
+</td></tr><tr><td>Return Level</td><td>Select the incident data structure returned. Possible values are Partial, Normal, or Full.
+</td></tr><tr><td>Field Handle</td><td>Specify the list of custom fields returned with the incident data.
+</td></tr><tr><td>Length</td><td>The maximum number of records to return in the response. Possible values are: Null or any value less than 1 to retrieve all records, up to the server-configured maximum limit. If the value is greater than 0 and exceeds the server-configured limit, an error will be thrown.
+</td></tr><tr><td>Start</td><td>Specify the paging to retrieve the first indicator record from IBM Security QRadar SOAR.
+</td></tr><tr><td>Records Total</td><td>The total number of records to be fetched for the current query from IBM Security QRadar SOAR.
+</td></tr><tr><td>Sorts</td><td>Specify the sorts to apply in the query to retrieve filtered records from IBM Security QRadar SOAR.
+</td></tr><tr><td>Logic Type</td><td>Specify the logic type to apply to these filters. Defaults to ANY if logic type is not specified.
+</td></tr></tbody></table>
 
 #### Output
 
  The output contains a non-dictionary value.
 
-### operation: Get Open Incidents
+### operation: Get Incidents Simulations
 #### Input parameters
-None.
+<table border=1><thead><tr><th>Parameter</th><th>Description</th></tr></thead><tbody><tr><td>Want Closed</td><td>Select this option, if closed simulations are to be returned (as well as open ones), otherwise it will return only open simulations.
+</td></tr></tbody></table>
 
 #### Output
 
@@ -87,6 +108,19 @@ None.
 ### operation: Get Incident Details
 #### Input parameters
 <table border=1><thead><tr><th>Parameter</th><th>Description</th></tr></thead><tbody><tr><td>Incident ID</td><td>Specify the incident ID to retrieve its details from IBM Security QRadar SOAR.
+</td></tr><tr><td>Version</td><td>Specify the latest version that the client already has. If the server hasn't changed since that version then an "HTTP 304 Not Modified" will be returned.
+</td></tr><tr><td>Include Findings</td><td>Determines whether the findings of an incident will be returned. If this value is true, the findings will be returned. The default is to return the findings.
+</td></tr></tbody></table>
+
+#### Output
+
+ The output contains a non-dictionary value.
+
+### operation: Get Incident Tasks
+#### Input parameters
+<table border=1><thead><tr><th>Parameter</th><th>Description</th></tr></thead><tbody><tr><td>Incident ID</td><td>Specify the incident ID to retrieve its details from IBM Security QRadar SOAR.
+</td></tr><tr><td>Want Layouts</td><td>Select this option, if tasks layout property gets filled in also. By default it set as false.
+</td></tr><tr><td>Want Notes</td><td>Select this option, if tasks note property gets filled in also. By default it set as false.
 </td></tr></tbody></table>
 
 #### Output
@@ -96,14 +130,8 @@ None.
 ### operation: Update Incident
 #### Input parameters
 <table border=1><thead><tr><th>Parameter</th><th>Description</th></tr></thead><tbody><tr><td>Incident ID</td><td>Specify the ID of the incident to update in IBM Security QRadar SOAR.
-</td></tr><tr><td>Incident Name</td><td>(Optional) Specify the name of the incident to update in IBM Security QRadar SOAR.
-</td></tr><tr><td>Description</td><td>(Optional) Specify a description of the incident to update in IBM Security QRadar SOAR.
-</td></tr><tr><td>Severity</td><td>(Optional) Specify the severity of the incident to update in IBM Security QRadar SOAR. You can choose from the following options: Low, Medium, or High.
-</td></tr><tr><td>Incident Type</td><td>(Optional) Specify the type of the incident to update in IBM Security QRadar SOAR. You can choose from the following options: CommunicationError, DenialOfService, ImproperDisposal:DigitalAsset, etc.
-</td></tr><tr><td>NIST Attack Vectors</td><td>(Optional) Specify the nist attack vectors to update in IBM Security QRadar SOAR. You can choose from the following options: Attrition, E-mail, External/RemovableMedia, etc.
-</td></tr><tr><td>Resolution</td><td>(Optional) Specify the resolution to update in IBM Security QRadar SOAR. You can choose from the following options: Unresolved, Duplicate, Not an Issue, or Resolved.
-</td></tr><tr><td>Resolution Summary</td><td>(Optional) Specify a summary of the resolution to update in IBM Security QRadar SOAR.
-</td></tr><tr><td>Custom Properties</td><td>(Optional) Specify the additional properties, in the JSON format, that you want to specify for the incident being updated in IBM Security QRadar SOAR. The additional properties signify additional fields associated with the incident.
+</td></tr><tr><td>Changes</td><td>Specify the list of changes to apply to the database object.
+</td></tr><tr><td>Version</td><td>Specify the version of the object as you know it to be. If the version number matches, the PATCH changes are accepted without conflict checking.
 </td></tr></tbody></table>
 
 #### Output
@@ -118,13 +146,76 @@ None.
 #### Output
 
  The output contains a non-dictionary value.
+
+### operation: Get Incident Artifacts
+#### Input parameters
+<table border=1><thead><tr><th>Parameter</th><th>Description</th></tr></thead><tbody><tr><td>Incident ID</td><td>Specify the ID of the incident to retrieve it's artifacts from IBM Security QRadar SOAR.
+</td></tr><tr><td>Filters</td><td>Specify the filters to apply in the query to retrieve filtered records from IBM Security QRadar SOAR.
+</td></tr><tr><td>Include Records</td><td>Select to include or exclude total count of the incidents that match the given filters in the response. This is set to true by default.
+</td></tr><tr><td>Return Level</td><td>Select the incident data structure returned. Possible values are Partial, Normal, or Full.
+</td></tr><tr><td>Field Handle</td><td>Specify the list of custom fields returned with the incident data.
+</td></tr><tr><td>Start</td><td>Specify the paging to retrieve the first indicator record from IBM Security QRadar SOAR.
+</td></tr><tr><td>Length</td><td>The maximum number of records to return in the response. Possible values are: Null or any value less than 1 to retrieve all records, up to the server-configured maximum limit. If the value is greater than 0 and exceeds the server-configured limit, an error will be thrown.
+</td></tr><tr><td>Records Total</td><td>The total number of records to be fetched for the current query from IBM Security QRadar SOAR.
+</td></tr><tr><td>Sorts</td><td>Specify the sorts to apply in the query to retrieve filtered records from IBM Security QRadar SOAR.
+</td></tr><tr><td>Logic Type</td><td>Specify the logic type to apply to these filters. Defaults to ANY if logic type is not specified.
+</td></tr></tbody></table>
+
+#### Output
+
+ No output schema is available at this time.
+
+### operation: Get Incident Notes
+#### Input parameters
+<table border=1><thead><tr><th>Parameter</th><th>Description</th></tr></thead><tbody><tr><td>Incident ID</td><td>Specify the ID of the incident to retrieve notes from IBM Security QRadar SOAR.
+</td></tr></tbody></table>
+
+#### Output
+
+ No output schema is available at this time.
+
+### operation: Get Incident Attachments
+#### Input parameters
+<table border=1><thead><tr><th>Parameter</th><th>Description</th></tr></thead><tbody><tr><td>Incident ID</td><td>Specify the ID of the incident to retrieve attachments from IBM Security QRadar SOAR.
+</td></tr></tbody></table>
+
+#### Output
+
+ No output schema is available at this time.
+
+### operation: Get Incident Attachment Details
+#### Input parameters
+<table border=1><thead><tr><th>Parameter</th><th>Description</th></tr></thead><tbody><tr><td>Incident ID</td><td>Specify the ID of the incident to retrieve attachments from IBM Security QRadar SOAR.
+</td></tr></tbody></table>
+
+#### Output
+
+ No output schema is available at this time.
+
+### operation: Get All Incident Details
+#### Input parameters
+<table border=1><thead><tr><th>Parameter</th><th>Description</th></tr></thead><tbody><tr><td>Incident ID</td><td>Specify the ID of the incident to retrieve it's details from IBM Security QRadar SOAR.
+</td></tr><tr><td>Filters</td><td>Specify the filters to apply in the query to retrieve filtered records from IBM Security QRadar SOAR.
+</td></tr><tr><td>Start</td><td>Specify the paging to retrieve the first indicator record from IBM Security QRadar SOAR.
+</td></tr><tr><td>Length</td><td>The maximum number of records to return in the response. Possible values are: Null or any value less than 1 to retrieve all records, up to the server-configured maximum limit. If the value is greater than 0 and exceeds the server-configured limit, an error will be thrown.
+</td></tr></tbody></table>
+
+#### Output
+
+ No output schema is available at this time.
 ## Included playbooks
-The `Sample - ibm-security-qradar-soar - 1.0.0` playbook collection comes bundled with the IBM Security QRadar SOAR connector. These playbooks contain steps using which you can perform all supported actions. You can see bundled playbooks in the **Automation** > **Playbooks** section in FortiSOAR&trade; after importing the IBM Security QRadar SOAR connector.
+The `Sample - IBM Security QRadar SOAR - 1.1.0` playbook collection comes bundled with the IBM Security QRadar SOAR connector. These playbooks contain steps using which you can perform all supported actions. You can see bundled playbooks in the **Automation** > **Playbooks** section in FortiSOAR&trade; after importing the IBM Security QRadar SOAR connector.
 
 - Close Incident
 - Create Incident
+- Get All Incident Details
+- Get Incident Artifacts
+- Get Incident Attachment Details
+- Get Incident Attachments
 - Get Incident Details
-- Get Open Incidents
+- Get Incident Notes
+- Get Incident Tasks
+- Get Incidents Simulations
 - Search Incidents
 - Update Incident
 

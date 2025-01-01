@@ -1,13 +1,12 @@
 """
 Copyright start
 MIT License
-Copyright (c) 2024 Fortinet Inc
+Copyright (c) 2025 Fortinet Inc
 Copyright end
 """
 
-import requests, json
+import requests, json, os
 from connectors.core.connector import get_logger, ConnectorError
-from .constant import *
 
 logger = get_logger('ibm-security-qradar-soar')
 
@@ -103,25 +102,50 @@ def search_incidents(config, params):
     try:
         ir = IBMResilient(config)
         endpoint = '/incidents/query_paged'
-        query_params = {
-            "include_records_total": params.get('include_records_total'),
-            "return_level": params.get('return_level'),
-            "field_handle": params.get('field_handle')
-        }
-        query_params = {k: v for k, v in query_params.items() if v is not None and v != ''}
-        payload = {
-            "start": params.get('start'),
-            "length": params.get('length'),
-            "recordsTotal": params.get('recordsTotal'),
-            "sorts": params.get('sorts'),
-            "filters": params.get('filters'),
-            "logic_type": params.get('logic_type')
-        }
-        payload = check_payload(payload)
-        logger.debug("Query Parameters {0}".format(query_params))
-        logger.debug("Payload {0}".format(payload))
-        response = ir.make_rest_call(endpoint, 'POST', params=query_params, data=json.dumps(payload))
-        return response
+        all_records = []
+        start = 0
+        batch_size = params.get("length", 1000)  # Default to 1000 records per batch
+
+        while True:
+            # Update the pagination parameters for each request
+            payload = {
+                "start": start,
+                "length": batch_size,
+                "sorts": params.get("sorts"),
+                "filters": params.get("filters"),
+                "logic_type": params.get("logic_type").lower() if params.get("logic_type") else '',
+            }
+            payload = check_payload(payload)
+
+            query_params = {
+                "include_records_total": params.get('include_records_total', True),
+                "return_level": params.get('return_level').lower() if params.get('return_level') else '',
+                "field_handle": params.get('field_handle'),
+            }
+            query_params = {k: v for k, v in query_params.items() if v is not None and v != ''}
+
+            logger.debug("Query Parameters {0}".format(query_params))
+            logger.debug("Payload {0}".format(payload))
+
+            # Fetch the current batch of incidents
+            response = ir.make_rest_call(endpoint, 'POST', params=query_params, data=json.dumps(payload))
+
+            # Check if response contains data
+            if not response or "data" not in response or not response["data"]:
+                break
+
+            # Append the retrieved records to all_records
+            all_records.extend(response["data"])
+
+            # Stop if all records have been retrieved
+            if start + batch_size >= response.get("recordsTotal", len(all_records)):
+                break
+
+            # Increment the start for the next batch
+            start += batch_size
+
+        logger.info(f"Total incidents retrieved: {len(all_records)}")
+        return all_records
     except Exception as err:
         raise ConnectorError(str(err))
 
@@ -205,6 +229,156 @@ def close_incident(config, params):
         raise ConnectorError(str(err))
 
 
+def get_incident_artifacts(config, params):
+    try:
+        ir = IBMResilient(config)
+        endpoint = '/incidents/{0}/artifacts/query_paged'.format(params.pop('incident_id'))
+        query_params = {
+            "include_records_total": params.get('include_records_total'),
+            "return_level": params.get('return_level').lower() if params.get('return_level') else '',
+            "field_handle": params.get('field_handle')
+        }
+        query_params = {k: v for k, v in query_params.items() if v is not None and v != ''}
+        payload = {
+            "start": params.get('start'),
+            "length": params.get('length'),
+            "recordsTotal": params.get('recordsTotal'),
+            "sorts": params.get('sorts'),
+            "filters": params.get('filters'),
+            "logic_type": params.get('logic_type').lower() if params.get('logic_type') else ''
+        }
+        payload = check_payload(payload)
+        logger.debug("Query Parameters {0}".format(query_params))
+        logger.debug("Payload {0}".format(payload))
+        response = ir.make_rest_call(endpoint, 'POST', params=query_params, data=json.dumps(payload))
+        return response
+    except Exception as err:
+        raise ConnectorError(str(err))
+
+
+def get_incident_notes(config, params):
+    try:
+        ir = IBMResilient(config)
+        endpoint = '/incidents/{0}/comments'.format(params.pop('incident_id'))
+        params = {k: v for k, v in params.items() if v is not None and v != ''}
+        logger.debug("Query Parameters {0}".format(params))
+        response = ir.make_rest_call(endpoint, 'GET', params=params)
+        return response
+    except Exception as err:
+        raise ConnectorError(str(err))
+
+
+def get_incident_attachments(config, params):
+    """
+    Retrieve all attachments associated with a specific incident.
+    """
+    try:
+        ir = IBMResilient(config)
+        endpoint = '/incidents/{0}/attachments'.format(params.pop('incident_id'))
+        params = {k: v for k, v in params.items() if v is not None and v != ''}
+        logger.debug("Query Parameters {0}".format(params))
+        response = ir.make_rest_call(endpoint, 'GET', params=params)
+        return response
+    except Exception as err:
+        raise ConnectorError(str(err))
+
+
+def get_incident_attachment_details(config, params):
+    try:
+        ir = IBMResilient(config)
+        incident_id = params.get('incidentID')
+
+        if not incident_id:
+            raise ConnectorError("Incident ID is required.")
+
+        list_attachments_endpoint = f'/incidents/{incident_id}/attachments'
+        attachments = ir.make_rest_call(list_attachments_endpoint, 'GET')
+
+        if not attachments or not isinstance(attachments, list):
+            return {"attachments": [], "message": "No attachments found for the incident."}
+
+        saved_attachments = []
+        tmp_dir = "/tmp"
+
+        for attachment in attachments:
+            attachment_id = attachment.get('id')
+            attachment_name = attachment.get('name')
+            if not attachment_id or not attachment_name:
+                logger.warning(f"Skipping attachment with missing ID or name: {attachment}")
+                continue
+
+            attachment_content_endpoint = f'/incidents/{incident_id}/attachments/{attachment_id}/contents'
+            response = ir.make_rest_call(attachment_content_endpoint, 'GET')
+
+            if isinstance(response, requests.Response):
+                attachment_content = response.content  # Use .content to handle binary data
+            else:
+                attachment_content = response  # Assuming this is raw content
+
+            sanitized_name = attachment_name.replace("/", "_").replace("\\", "_")  # Avoid invalid file names
+            file_path = os.path.join(tmp_dir, sanitized_name)
+            with open(file_path, 'wb') as f:
+                f.write(attachment_content)
+
+            logger.info(f"Attachment saved: {file_path}")
+
+            saved_attachments.append({
+                "attachment_id": attachment_id,
+                "attachment_name": attachment_name,
+                "file_path": file_path
+            })
+
+        return {"attachments": saved_attachments}
+    except Exception as err:
+        raise ConnectorError(str(err))
+
+
+def get_all_incident_details(config, params):
+    """
+    Retrieve tasks, artifacts, notes, and attachments associated with a specific incident.
+    """
+    try:
+        ir = IBMResilient(config)
+        incident_id = params.pop('incidentID')
+
+        # Prepare endpoints and methods for each data type
+        endpoints = {
+            "tasks": {"method": "GET", "endpoint": f"/incidents/{incident_id}/tasks"},
+            "artifacts": {"method": "POST", "endpoint": f"/incidents/{incident_id}/artifacts/query_paged"},
+            "notes": {"method": "GET", "endpoint": f"/incidents/{incident_id}/comments"},
+            "attachments": {"method": "GET", "endpoint": f"/incidents/{incident_id}/attachments"}
+        }
+
+        # Initialize response dictionary
+        combined_response = {}
+
+        # Fetch data for each endpoint
+        for key, value in endpoints.items():
+            endpoint = value["endpoint"]
+            method = value["method"]
+
+            if key == "artifacts":
+                # Artifacts require a POST request with payload
+                payload = {
+                    "start": params.get("start", 0),
+                    "length": params.get("length", 50),
+                    "filters": params.get("filters", [])
+                }
+                payload = check_payload(payload)
+                response = ir.make_rest_call(endpoint, method, data=json.dumps(payload))
+            else:
+                # Tasks, notes, and attachments use GET requests
+                response = ir.make_rest_call(endpoint, method, params=params)
+
+            # Store each response in the combined dictionary
+            combined_response[key] = response
+
+        return combined_response
+
+    except Exception as err:
+        raise ConnectorError(str(err))
+
+
 def check_health(config):
     try:
         response = get_incident_simulations(config, params={"want_closed": True})
@@ -222,5 +396,10 @@ operations = {
     'get_incident_simulations': get_incident_simulations,
     'get_incident_details': get_incident_details,
     'update_incident': update_incident,
-    'close_incident': close_incident
+    'close_incident': close_incident,
+    'get_incident_artifacts': get_incident_artifacts,
+    'get_incident_notes': get_incident_notes,
+    'get_incident_attachments': get_incident_attachments,
+    'get_incident_attachment_details': get_incident_attachment_details,
+    'get_all_incident_details': get_all_incident_details
 }
