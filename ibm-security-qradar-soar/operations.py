@@ -1,13 +1,12 @@
 """
 Copyright start
 MIT License
-Copyright (c) 2024 Fortinet Inc
+Copyright (c) 2025 Fortinet Inc
 Copyright end
 """
 
-import requests, json, datetime, time
+import requests, json, os
 from connectors.core.connector import get_logger, ConnectorError
-from .constant import *
 
 logger = get_logger('ibm-security-qradar-soar')
 
@@ -55,26 +54,45 @@ class IBMResilient(object):
             raise ConnectorError(str(err))
 
 
-def convert_datetime_to_epoch(date_time):
-    unix_epoch = datetime.datetime(1970, 1, 1)
-    d1 = datetime.datetime.strptime(date_time, "%Y-%m-%dT%H:%M:%S.%fZ")
-    epoch = (d1 - unix_epoch).total_seconds()
-    return int(epoch * 1000)
+def check_payload(payload):
+    updated_payload = {}
+    for key, value in payload.items():
+        if isinstance(value, dict):
+            nested = check_payload(value)
+            if len(nested.keys()) > 0:
+                updated_payload[key] = nested
+        elif value != '' and value is not None:
+            updated_payload[key] = value
+    return updated_payload
 
 
 def create_incident(config, params):
     try:
         ir = IBMResilient(config)
         endpoint = '/incidents'
+        query_params = {
+            "want_full_data": params.get('want_full_data'),
+            "want_tasks": params.get('want_tasks')
+        }
+        query_params = {k: v for k, v in query_params.items() if v is not None and v != ''}
         payload = {
-            "name": params.get('incident_name'),
-            "discovered_date": 0
+            "name": params.get('name'),
+            "discovered_date": params.get('discovered_date'),
+            "description": params.get('description'),
+            "dtm": params.get('dtm'),
+            "cm": params.get('cm'),
+            "regulators": params.get('regulators'),
+            "hipaa": params.get('hipaa'),
+            "artifacts": params.get('artifacts'),
+            "findings": params.get('findings'),
+            "comments": params.get('comments')
         }
         additional_fields = params.pop('additional_fields')
         if additional_fields:
             payload.update(additional_fields)
-        payload = {k: v for k, v in payload.items() if v is not None and v != ''}
-        response = ir.make_rest_call(endpoint, 'POST', data=json.dumps(payload))
+        payload = check_payload(payload)
+        logger.debug("Payload {0}".format(payload))
+        response = ir.make_rest_call(endpoint, 'POST', params=query_params, data=json.dumps(payload))
         return response
     except Exception as err:
         raise ConnectorError(str(err))
@@ -82,157 +100,71 @@ def create_incident(config, params):
 
 def search_incidents(config, params):
     try:
-        conditions = []
         ir = IBMResilient(config)
-        endpoint = '/incidents/query'
-        additional_fields = params.pop('additional_fields')
-        if additional_fields:
-            params.update(additional_fields)
-        params = {k: v for k, v in params.items() if v is not None and v != ''}
-        if 'severity' in params:
-            value = []
-            severity = params.get('severity')
-            if 'Low' in severity:
-                value.append(50)
-            if 'Medium' in severity:
-                value.append(51)
-            if 'High' in severity:
-                value.append(52)
-            conditions.append({
-                'field_name': 'severity_code',
-                'method': 'in',
-                'value': value
-            })
-        if 'date_created_before' in params:
-            date_time = params.get('date_created_before')
-            value = convert_datetime_to_epoch(date_time=date_time)
-            conditions.append({
-                'field_name': 'create_date',
-                'method': 'lte',
-                'value': value
-            })
-        elif 'date_created_after' in params:
-            date_time = params.get('date_created_after')
-            value = convert_datetime_to_epoch(date_time=date_time)
-            conditions.append({
-                'field_name': 'create_date',
-                'method': 'gte',
-                'value': value
-            })
-        elif 'date_created_within_the_last' in params:
-            within_the_last = int(params.get('date_created_within_the_last'))
-            now = int(time.time())
-            timeframe = params.get('created_timeframe').lower()
-            if timeframe == 'days':
-                from_time = now - (60 * 60 * 24 * within_the_last)
-            elif timeframe == 'hours':
-                from_time = now - (60 * 60 * within_the_last)
-            elif timeframe == 'minutes':
-                from_time = now - (60 * within_the_last)
-            conditions.extend((
-                {
-                    'field_name': 'create_date',
-                    'method': 'lte',
-                    'value': now * 1000
-                },
-                {
-                    'field_name': 'create_date',
-                    'method': 'gte',
-                    'value': from_time * 1000
-                }))
-        if 'date_occurred_before' in params:
-            value = params.get('date_occurred_before')
-            conditions.append({
-                'field_name': 'start_date',
-                'method': 'lte',
-                'value': value
-            })
-        elif 'date_occurred_after' in params:
-            value = params.get('date_occurred_after')
-            conditions.append({
-                'field_name': 'start_date',
-                'method': 'gte',
-                'value': value
-            })
-        elif 'date_occurred_within_the_last' in params:
-            within_the_last = int(params.get('date_occurred_within_the_last'))
-            now = int(time.time())
-            timeframe = params.get('occurred_timeframe').lower()
-            if timeframe == 'days':
-                from_time = now - (60 * 60 * 24 * within_the_last)
-            elif timeframe == 'hours':
-                from_time = now - (60 * 60 * within_the_last)
-            elif timeframe == 'minutes':
-                from_time = now - (60 * within_the_last)
-            conditions.extend((
-                {
-                    'field_name': 'start_date',
-                    'method': 'lte',
-                    'value': now * 1000
-                },
-                {
-                    'field_name': 'start_date',
-                    'method': 'gte',
-                    'value': from_time * 1000
-                }))
-        if 'incident_type' in params:
-            type_id = INCIDENT_TYPE(params.get('incident_type'))
-            conditions.append({
-                'field_name': 'incident_type_ids',
-                'method': 'contains',
-                'value': [type_id]
-            })
-        if 'nist' in params:
-            nist = NIST.get(params.get('nist'))
-            conditions.append({
-                'field_name': 'nist_attack_vectors',
-                'method': 'contains',
-                'value': [nist]
-            })
-        if 'status' in params:
-            status = 'A' if params.get('status') == 'Active' else 'C'
-            conditions.append({
-                'field_name': 'plan_status',
-                'method': 'in',
-                'value': [status]
-            })
-        if 'due_in' in params:
-            within_the_last = int(params.get('due_in'))
-            now = int(time.time())
-            timeframe = params.get('due_timeframe').lower()
-            if timeframe == 'days':
-                to_time = now + (60 * 60 * 24 * within_the_last)
-            elif timeframe == 'hours':
-                to_time = now + (60 * 60 * within_the_last)
-            elif timeframe == 'minutes':
-                to_time = now + (60 * within_the_last)
-            conditions.extend((
-                {
-                    'field_name': 'due_date',
-                    'method': 'lte',
-                    'value': to_time * 1000
-                },
-                {
-                    'field_name': 'due_date',
-                    'method': 'gte',
-                    'value': now * 1000
-                }))
-        data = {
-            'filters': [{
-                'conditions': conditions
-            }]
-        }
-        response = ir.make_rest_call(endpoint, 'POST', data=json.dumps(data))
+        endpoint = '/incidents/query_paged'
+        all_records = []
+        start = 0
+        batch_size = params.get("length", 1000)  # Default to 1000 records per batch
+
+        while True:
+            # Update the pagination parameters for each request
+            payload = {
+                "start": start,
+                "length": batch_size,
+                "sorts": params.get("sorts"),
+                "filters": params.get("filters"),
+                "logic_type": params.get("logic_type").lower() if params.get("logic_type") else '',
+            }
+            payload = check_payload(payload)
+
+            query_params = {
+                "include_records_total": params.get('include_records_total', True),
+                "return_level": params.get('return_level').lower() if params.get('return_level') else '',
+                "field_handle": params.get('field_handle'),
+            }
+            query_params = {k: v for k, v in query_params.items() if v is not None and v != ''}
+
+            logger.debug("Query Parameters {0}".format(query_params))
+            logger.debug("Payload {0}".format(payload))
+
+            # Fetch the current batch of incidents
+            response = ir.make_rest_call(endpoint, 'POST', params=query_params, data=json.dumps(payload))
+
+            # Check if response contains data
+            if not response or "data" not in response or not response["data"]:
+                break
+
+            # Append the retrieved records to all_records
+            all_records.extend(response["data"])
+
+            # Stop if all records have been retrieved
+            if start + batch_size >= response.get("recordsTotal", len(all_records)):
+                break
+
+            # Increment the start for the next batch
+            start += batch_size
+
+        logger.info(f"Total incidents retrieved: {len(all_records)}")
+        return all_records
+    except Exception as err:
+        raise ConnectorError(str(err))
+
+
+def get_incident_simulations(config, params):
+    try:
+        ir = IBMResilient(config)
+        endpoint = '/incidents/simulations'
+        response = ir.make_rest_call(endpoint, 'GET', params=params)
         return response
     except Exception as err:
         raise ConnectorError(str(err))
 
 
-def get_open_incidents(config, params):
+def get_incident_tasks(config, params):
     try:
         ir = IBMResilient(config)
-        endpoint = '/incidents/open'
-        response = ir.make_rest_call(endpoint, 'GET')
+        endpoint = '/incidents/{0}/tasks'.format(params.pop('incident_id'))
+        response = ir.make_rest_call(endpoint, 'GET', params=params)
         return response
     except Exception as err:
         raise ConnectorError(str(err))
@@ -241,8 +173,9 @@ def get_open_incidents(config, params):
 def get_incident_details(config, params):
     try:
         ir = IBMResilient(config)
-        endpoint = '/incidents/{0}'.format(params.get('incident_id'))
-        response = ir.make_rest_call(endpoint, 'GET')
+        endpoint = '/incidents/{0}'.format(params.pop('incident_id'))
+        params = {k: v for k, v in params.items() if v is not None and v != ''}
+        response = ir.make_rest_call(endpoint, 'GET', params=params)
         return response
     except Exception as err:
         raise ConnectorError(str(err))
@@ -250,113 +183,18 @@ def get_incident_details(config, params):
 
 def update_incident(config, params):
     try:
-        data = []
         ir = IBMResilient(config)
-        incident_id = params.pop('incident_id')
-        incident_details = get_incident_details(config, params={'incident_id': incident_id})
-        additional_fields = params.pop('additional_fields')
-        if additional_fields:
-            params.update(additional_fields)
-        params = {k: v for k, v in params.items() if v is not None and v != ''}
-        if 'severity' in params:
-            old_severity = incident_details['severity_code']
-            new_severity = SEVERITY.get(params.get('severity'))
-            data.append({
-                'field': 'severity_code',
-                'old_value': {
-                    'id': old_severity
-                },
-                'new_value': {
-                    'id': new_severity
-                }
-            })
-        if 'incident_type' in params:
-            old_incident_type = incident_details['incident_type_ids']
-            new_incident_type = INCIDENT_TYPE.get(params.get('incident_type'))
-            new_incident_type_list = old_incident_type[:]
-            new_incident_type_list.append(new_incident_type)
-            data.append({
-                'field': 'incident_type_ids',
-                'old_value': {
-                    'ids': old_incident_type
-                },
-                'new_value': {
-                    'ids': new_incident_type_list
-                }
-            })
-        if 'nist' in params:
-            old_nist = incident_details['nist_attack_vectors']
-            new_nist = NIST.get(params.get('nist'))
-            new_nist_list = old_nist[:]
-            new_nist_list.append(new_nist)
-            data.append({
-                'field': 'nist_attack_vectors',
-                'old_value': {
-                    'ids': old_nist
-                },
-                'new_value': {
-                    'ids': new_nist_list
-                }
-            })
-        if 'resolution' in params:
-            old_resolution = incident_details['resolution_id']
-            new_resolution = RESOLUTION_TO_ID.get(params.get('resolution'))
-            data.append({
-                'field': 'resolution_id',
-                'old_value': {
-                    'id': old_resolution
-                },
-                'new_value': {
-                    'id': new_resolution
-                }
-            })
-        if 'resolution_summary' in params:
-            old_resolution_summary = incident_details['resolution_summary']
-            new_resolution_summary = params.get('resolution_summary')
-            data.append({
-                'field': 'resolution_summary',
-                'old_value': {
-                    'textarea': old_resolution_summary
-                },
-                'new_value': {
-                    'textarea': {
-                        'format': 'html',
-                        'content': new_resolution_summary
-                    }
-                }
-            })
-        if 'description' in params:
-            old_description = incident_details['description']
-            new_description = params.get('description')
-            data.append({
-                'field': 'description',
-                'old_value': {
-                    'textarea': old_description
-                },
-                'new_value': {
-                    'textarea': {
-                        'format': 'html',
-                        'content': new_description
-                    }
-                }
-            })
-        if 'name' in params:
-            old_name = incident_details['name']
-            new_name = params.get('name')
-            data.append({
-                'field': 'name',
-                'old_value': {
-                    'text': old_name
-                },
-                'new_value': {
-                    'text': new_name
-                }
-            })
-        payload = {
-            'changes': data
+        endpoint = '/incidents/{0}'.format(params.pop('incident_id'))
+        query_parameter = {
+            "return_dto": True
         }
-        endpoint = '/incidents/{0}'.format(incident_id)
-        response = ir.make_rest_call(endpoint, 'PATCH', data=json.dumps(payload))
+        payload = {
+            "changes": params.get('changes'),
+            "version": params.get('version')
+        }
+        payload = check_payload(payload)
+        logger.debug("Payload {0}".format(payload))
+        response = ir.make_rest_call(endpoint, 'PATCH', params=query_parameter, data=json.dumps(payload))
         return response
     except Exception as err:
         raise ConnectorError(str(err))
@@ -371,28 +209,179 @@ def close_incident(config, params):
             return 'Resolution and resolution summary of the incident should be updated before closing an incident.'
         old_incident_status = incident_details['plan_status']
         data = {
-            'changes': [
+            "changes": [
                 {
-                    'field': 'plan_status',
-                    'old_value': {
-                        'text': old_incident_status
+                    "field": "plan_status",
+                    "old_value": {
+                        "text": old_incident_status
                     },
-                    'new_value': {
-                        'text': 'C'
+                    "new_value": {
+                        "text": "C"
                     }
                 }
             ]
         }
         endpoint = '/incidents/{0}'.format(incident_id)
+        logger.debug("Payload {0}".format(data))
         response = ir.make_rest_call(endpoint, 'PATCH', data=json.dumps(data))
         return response
     except Exception as err:
         raise ConnectorError(str(err))
 
 
+def get_incident_artifacts(config, params):
+    try:
+        ir = IBMResilient(config)
+        endpoint = '/incidents/{0}/artifacts/query_paged'.format(params.pop('incident_id'))
+        query_params = {
+            "include_records_total": params.get('include_records_total'),
+            "return_level": params.get('return_level').lower() if params.get('return_level') else '',
+            "field_handle": params.get('field_handle')
+        }
+        query_params = {k: v for k, v in query_params.items() if v is not None and v != ''}
+        payload = {
+            "start": params.get('start'),
+            "length": params.get('length'),
+            "recordsTotal": params.get('recordsTotal'),
+            "sorts": params.get('sorts'),
+            "filters": params.get('filters'),
+            "logic_type": params.get('logic_type').lower() if params.get('logic_type') else ''
+        }
+        payload = check_payload(payload)
+        logger.debug("Query Parameters {0}".format(query_params))
+        logger.debug("Payload {0}".format(payload))
+        response = ir.make_rest_call(endpoint, 'POST', params=query_params, data=json.dumps(payload))
+        return response
+    except Exception as err:
+        raise ConnectorError(str(err))
+
+
+def get_incident_notes(config, params):
+    try:
+        ir = IBMResilient(config)
+        endpoint = '/incidents/{0}/comments'.format(params.pop('incident_id'))
+        params = {k: v for k, v in params.items() if v is not None and v != ''}
+        logger.debug("Query Parameters {0}".format(params))
+        response = ir.make_rest_call(endpoint, 'GET', params=params)
+        return response
+    except Exception as err:
+        raise ConnectorError(str(err))
+
+
+def get_incident_attachments(config, params):
+    """
+    Retrieve all attachments associated with a specific incident.
+    """
+    try:
+        ir = IBMResilient(config)
+        endpoint = '/incidents/{0}/attachments'.format(params.pop('incident_id'))
+        params = {k: v for k, v in params.items() if v is not None and v != ''}
+        logger.debug("Query Parameters {0}".format(params))
+        response = ir.make_rest_call(endpoint, 'GET', params=params)
+        return response
+    except Exception as err:
+        raise ConnectorError(str(err))
+
+
+def get_incident_attachment_details(config, params):
+    try:
+        ir = IBMResilient(config)
+        incident_id = params.get('incidentID')
+
+        if not incident_id:
+            raise ConnectorError("Incident ID is required.")
+
+        list_attachments_endpoint = f'/incidents/{incident_id}/attachments'
+        attachments = ir.make_rest_call(list_attachments_endpoint, 'GET')
+
+        if not attachments or not isinstance(attachments, list):
+            return {"attachments": [], "message": "No attachments found for the incident."}
+
+        saved_attachments = []
+        tmp_dir = "/tmp"
+
+        for attachment in attachments:
+            attachment_id = attachment.get('id')
+            attachment_name = attachment.get('name')
+            if not attachment_id or not attachment_name:
+                logger.warning(f"Skipping attachment with missing ID or name: {attachment}")
+                continue
+
+            attachment_content_endpoint = f'/incidents/{incident_id}/attachments/{attachment_id}/contents'
+            response = ir.make_rest_call(attachment_content_endpoint, 'GET')
+
+            if isinstance(response, requests.Response):
+                attachment_content = response.content  # Use .content to handle binary data
+            else:
+                attachment_content = response  # Assuming this is raw content
+
+            sanitized_name = attachment_name.replace("/", "_").replace("\\", "_")  # Avoid invalid file names
+            file_path = os.path.join(tmp_dir, sanitized_name)
+            with open(file_path, 'wb') as f:
+                f.write(attachment_content)
+
+            logger.info(f"Attachment saved: {file_path}")
+
+            saved_attachments.append({
+                "attachment_id": attachment_id,
+                "attachment_name": attachment_name,
+                "file_path": file_path
+            })
+
+        return {"attachments": saved_attachments}
+    except Exception as err:
+        raise ConnectorError(str(err))
+
+
+def get_all_incident_details(config, params):
+    """
+    Retrieve tasks, artifacts, notes, and attachments associated with a specific incident.
+    """
+    try:
+        ir = IBMResilient(config)
+        incident_id = params.pop('incidentID')
+
+        # Prepare endpoints and methods for each data type
+        endpoints = {
+            "tasks": {"method": "GET", "endpoint": f"/incidents/{incident_id}/tasks"},
+            "artifacts": {"method": "POST", "endpoint": f"/incidents/{incident_id}/artifacts/query_paged"},
+            "notes": {"method": "GET", "endpoint": f"/incidents/{incident_id}/comments"},
+            "attachments": {"method": "GET", "endpoint": f"/incidents/{incident_id}/attachments"}
+        }
+
+        # Initialize response dictionary
+        combined_response = {}
+
+        # Fetch data for each endpoint
+        for key, value in endpoints.items():
+            endpoint = value["endpoint"]
+            method = value["method"]
+
+            if key == "artifacts":
+                # Artifacts require a POST request with payload
+                payload = {
+                    "start": params.get("start", 0),
+                    "length": params.get("length", 50),
+                    "filters": params.get("filters", [])
+                }
+                payload = check_payload(payload)
+                response = ir.make_rest_call(endpoint, method, data=json.dumps(payload))
+            else:
+                # Tasks, notes, and attachments use GET requests
+                response = ir.make_rest_call(endpoint, method, params=params)
+
+            # Store each response in the combined dictionary
+            combined_response[key] = response
+
+        return combined_response
+
+    except Exception as err:
+        raise ConnectorError(str(err))
+
+
 def check_health(config):
     try:
-        response = get_open_incidents(config, params={})
+        response = get_incident_simulations(config, params={"want_closed": True})
         if response:
             return True
     except Exception as err:
@@ -401,10 +390,16 @@ def check_health(config):
 
 
 operations = {
+    'get_incident_tasks': get_incident_tasks,
     'create_incident': create_incident,
     'search_incidents': search_incidents,
-    'get_open_incidents': get_open_incidents,
+    'get_incident_simulations': get_incident_simulations,
     'get_incident_details': get_incident_details,
     'update_incident': update_incident,
-    'close_incident': close_incident
+    'close_incident': close_incident,
+    'get_incident_artifacts': get_incident_artifacts,
+    'get_incident_notes': get_incident_notes,
+    'get_incident_attachments': get_incident_attachments,
+    'get_incident_attachment_details': get_incident_attachment_details,
+    'get_all_incident_details': get_all_incident_details
 }

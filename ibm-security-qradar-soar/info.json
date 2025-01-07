@@ -1,13 +1,13 @@
 {
   "name": "ibm-security-qradar-soar",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "label": "IBM Security QRadar SOAR",
   "description": "IBM Security QRadar SOAR is a software platform designed to help organizations manage and respond to security incidents effectively. It provides a comprehensive approach to incident response by integrating with various security tools and automating processes to streamline incident handling.",
   "publisher": "Fortinet",
   "cs_approved": false,
   "cs_compatible": true,
   "contributor": "",
-  "help_online": "https://github.com/fortinet-fortisoar/connector-ibm-security-qradar-soar/blob/release/1.0.0/docs/IBMSOAR.md",
+  "help_online": "https://github.com/fortinet-fortisoar/connector-ibm-security-qradar-soar/blob/release/1.1.0/docs/IBMSOAR.md",
   "icon_small_name": "small.png",
   "icon_large_name": "large.png",
   "category": "SOAR",
@@ -77,13 +77,450 @@
       "parameters": [
         {
           "title": "Incident Name",
-          "name": "incident_name",
+          "name": "name",
           "description": "Specify a name of the incident to create in IBM Security QRadar SOAR.",
           "type": "text",
           "visible": true,
           "editable": true,
           "required": true,
           "tooltip": "Specify a name of the incident to create in IBM Security QRadar SOAR."
+        },
+        {
+          "title": "Discovered Date",
+          "name": "discovered_date",
+          "description": "Specify the discovered date of the incident to create in IBM Security QRadar SOAR.",
+          "type": "integer",
+          "visible": true,
+          "editable": true,
+          "required": true,
+          "tooltip": "Specify the discovered date of the incident to create in IBM Security QRadar SOAR.",
+          "value": 0
+        },
+        {
+          "title": "Description",
+          "name": "description",
+          "description": "Specify a description of the incident to create in IBM Security QRadar SOAR.",
+          "type": "json",
+          "visible": true,
+          "editable": true,
+          "required": false,
+          "tooltip": "Specify a description of the incident to create in IBM Security QRadar SOAR.",
+          "value": {
+            "format": "",
+            "content": ""
+          }
+        },
+        {
+          "title": "Include Full Data",
+          "name": "want_full_data",
+          "description": "If false an incidentDTO is returned instead of the default fullIncidentDataDTO. The fullIncidentDataDTO contains everything about the incident. The incidentDTO will contain just a high level details.",
+          "type": "checkbox",
+          "visible": true,
+          "editable": true,
+          "required": false,
+          "tooltip": "If false an incidentDTO is returned instead of the default fullIncidentDataDTO. The fullIncidentDataDTO contains everything about the incident. The incidentDTO will contain just a high level details.",
+          "value": true
+        },
+        {
+          "title": "Include Tasks Property",
+          "name": "want_tasks",
+          "description": "If true the fullIncidentDataDTO tasks property gets filled in also. The default is false. Note that this parameter is ignored if \"Include Full Data\" is false.",
+          "type": "checkbox",
+          "visible": true,
+          "editable": true,
+          "required": false,
+          "tooltip": "If true the fullIncidentDataDTO tasks property gets filled in also. The default is false. Note that this parameter is ignored if \"Include Full Data\" is false.",
+          "value": false
+        },
+        {
+          "title": "Incident Data Types",
+          "description": "Specify the information about the types of data that were lost (e.g First Name, Last Name, Credit card number, etc.)",
+          "tooltip": "Specify the information about the types of data that were lost (e.g First Name, Last Name, Credit card number, etc.)",
+          "type": "json",
+          "name": "dtm",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "value": {
+            "First Name": true
+          }
+        },
+        {
+          "title": "Record Counts",
+          "description": "Specify the information about the counts of records that were lost for the different geographical regions.",
+          "tooltip": "Specify the information about the counts of records that were lost for the different geographical regions.",
+          "type": "json",
+          "name": "cm",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "value": {
+            "unassigneds": [
+              {
+                "geo": {},
+                "count": ""
+              }
+            ],
+            "total": "",
+            "geo_counts": {}
+          }
+        },
+        {
+          "title": "Regulators",
+          "description": "Specify the information about the regulators that are in effect for the incident. Note that the ids property of the regulatorsDTO contains non-state/province regulators. So for example, you'd include the ID of the \"GLB Act\" regulator here. State regulators will be used if record counts are specified for that state.",
+          "tooltip": "Specify the information about the regulators that are in effect for the incident. Note that the ids property of the regulatorsDTO contains non-state/province regulators. So for example, you'd include the ID of the \"GLB Act\" regulator here. State regulators will be used if record counts are specified for that state.",
+          "type": "json",
+          "name": "regulators",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "value": {
+            "ids": []
+          }
+        },
+        {
+          "title": "Hipaa",
+          "description": "Specify the  information required by HIPAA. If HIPAA does not apply to this incident then the hipaa propert can be empty.",
+          "tooltip": "Specify the  information required by HIPAA. If HIPAA does not apply to this incident then the hipaa propert can be empty.",
+          "type": "json",
+          "name": "hipaa",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "value": {
+            "hipaa_adverse": true,
+            "hipaa_misused": true,
+            "hipaa_acquired": true,
+            "hipaa_additional_misuse": true,
+            "hipaa_breach": true,
+            "hipaa_adverse_comment": "",
+            "hipaa_misused_comment": "",
+            "hipaa_acquired_comment": "",
+            "hipaa_additional_misuse_comment": "",
+            "hipaa_breach_comment": ""
+          }
+        },
+        {
+          "title": "Artifacts",
+          "description": "Specify the list of tasks for the incident.",
+          "tooltip": "Specify the list of tasks for the incident.",
+          "type": "json",
+          "name": "artifacts",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "value": [
+            {
+              "id": "",
+              "type": {
+                "name": "",
+                "id": {}
+              },
+              "value": "",
+              "description": {
+                "format": "",
+                "content": ""
+              },
+              "hits": [
+                {
+                  "id": "",
+                  "value": "",
+                  "threat_source_id": {},
+                  "artifact_type_id": {},
+                  "properties": {},
+                  "active": true,
+                  "created": "",
+                  "threat_source_type": ""
+                }
+              ],
+              "attachment": {
+                "id": "",
+                "uuid": "",
+                "name": "",
+                "content_type": "",
+                "created": "",
+                "creator_id": {},
+                "size": "",
+                "vers": "",
+                "actions": [],
+                "playbooks": [],
+                "inc_id": "",
+                "inc_name": "",
+                "inc_owner": {},
+                "task_id": "",
+                "task_name": "",
+                "task_custom": true,
+                "task_at_id": {},
+                "task_members": [],
+                "type": "",
+                "reconciliation_status": ""
+              },
+              "parent_id": "",
+              "inc_id": "",
+              "inc_name": "",
+              "inc_owner": {
+                "name": "",
+                "id": {}
+              },
+              "created": "",
+              "last_modified_by": {
+                "id": "",
+                "type": "",
+                "name": "",
+                "display_name": ""
+              },
+              "last_modified_time": "",
+              "pending_sources": [],
+              "pending_scan_result": true,
+              "perms": {
+                "read": true,
+                "write": true,
+                "delete": true
+              },
+              "properties": [
+                {
+                  "name": "",
+                  "value": ""
+                }
+              ],
+              "generic_properties": [
+                {
+                  "name": "",
+                  "value": ""
+                }
+              ],
+              "location": {
+                "latlng": {},
+                "city": "",
+                "state": "",
+                "country": "",
+                "postalCode": "",
+                "continent": ""
+              },
+              "whois": {
+                "raw": "",
+                "pending": true,
+                "invalid": true,
+                "last_modified_time": ""
+              },
+              "actions": [
+                {
+                  "id": "",
+                  "name": "",
+                  "enabled": ""
+                }
+              ],
+              "playbooks": [
+                {
+                  "playbook_handle": {},
+                  "display_name": ""
+                }
+              ],
+              "relating": true,
+              "creator_principal": {
+                "id": "",
+                "type": "",
+                "name": "",
+                "display_name": ""
+              },
+              "ip": {
+                "destination": true,
+                "source": true
+              },
+              "context_data": {},
+              "related_incident_count": "",
+              "enrichments_count": "",
+              "global_info": {
+                "id": "",
+                "type": {},
+                "value": "",
+                "description": {},
+                "properties": [
+                ],
+                "creator": {},
+                "created": "",
+                "last_modified_by": {},
+                "last_modified_time": "",
+                "related_incident_count": "",
+                "last_related_inc_id": "",
+                "last_related_inc_owner_handle": {},
+                "last_associated_time": "",
+                "perms": {},
+                "first_associated_time": "",
+                "first_related_inc_id": "",
+                "first_related_inc_owner_handle": {},
+                "tags": [],
+                "version": "",
+                "scan_option": "",
+                "relating": true,
+                "location": {},
+                "whois": {},
+                "hit_threat_sources": []
+              },
+              "explainability": [
+                {
+                  "id": "",
+                  "context": "",
+                  "time_observed": "",
+                  "create_date": "",
+                  "severity": "",
+                  "score": "",
+                  "automatic_score": "",
+                  "scores": [
+                  ],
+                  "inc_id": "",
+                  "finding_id": "",
+                  "iart_id": "",
+                  "correlation_observable_refs": [
+                  ],
+                  "parent_incident_id": ""
+                }
+              ],
+              "score": "",
+              "cumulative_score": "",
+              "automatic_score": "",
+              "findings_count": ""
+            }
+          ]
+        },
+        {
+          "title": "Findings",
+          "description": "Specify the list of findings for the incident.",
+          "tooltip": "Specify the list of findings for the incident.",
+          "type": "json",
+          "name": "findings",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "value": [
+            {
+              "observable_refs": [],
+              "low_level_categories": [],
+              "external_mitre_ids": [],
+              "external_severity": "",
+              "data_source_id": "",
+              "properties": [
+                {
+                  "name": "",
+                  "value": ""
+                }
+              ],
+              "explainability": [
+                {
+                  "id": "",
+                  "context": "",
+                  "time_observed": "",
+                  "create_date": "",
+                  "severity": "",
+                  "score": "",
+                  "automatic_score": "",
+                  "scores": [],
+                  "inc_id": "",
+                  "finding_id": "",
+                  "iart_id": "",
+                  "correlation_observable_refs": [],
+                  "parent_incident_id": ""
+                }
+              ],
+              "case_name": "",
+              "external_alert_id": "",
+              "description": "",
+              "mitre_ids": [],
+              "severity": "",
+              "inc_id": "",
+              "created_by_id": "",
+              "created_by_version": "",
+              "name": "",
+              "detection_source_type_name": "...",
+              "original_time": "",
+              "score": "",
+              "cumulative_score": "",
+              "id": "",
+              "created_date": "",
+              "creator": {
+                "id": "",
+                "type": "",
+                "name": "",
+                "display_name": ""
+              },
+              "created_by_type": "",
+              "artifact_count": "",
+              "explainability_score_count": "",
+              "automatic_score": "",
+              "shared_artifact_count": ""
+            }
+          ]
+        },
+        {
+          "title": "Comments",
+          "description": "Specify the some notes for the incident.",
+          "tooltip": "Specify the some notes for the incident.",
+          "type": "json",
+          "name": "comments",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "value": [
+            {
+              "id": "",
+              "parent_id": "",
+              "user_id": {
+                "name": "",
+                "id": {}
+              },
+              "create_date": "",
+              "modify_date": "",
+              "text": {
+                "format": "",
+                "content": ""
+              },
+              "children": [
+              ],
+              "mentioned_users": [
+              ],
+              "comment_perms": {
+                "update": true,
+                "delete": true
+              },
+              "is_deleted": true,
+              "actions": [
+                {
+                  "id": "",
+                  "name": "",
+                  "enabled": true
+                }
+              ],
+              "playbooks": [
+                {
+                  "playbook_handle": {},
+                  "display_name": ""
+                }
+              ],
+              "inc_id": "",
+              "inc_name": "",
+              "task_id": "",
+              "task_name": "",
+              "task_custom": true,
+              "task_at_id": {
+                "name": "",
+                "id": {}
+              },
+              "task_members": [
+              ],
+              "type": "",
+              "inc_owner": {
+                "name": "",
+                "id": {}
+              },
+              "user_name": "",
+              "modify_principal": {
+                "id": "",
+                "type": "",
+                "name": "",
+                "display_name": ""
+              }
+            }
+          ]
         },
         {
           "title": "Custom Properties",
@@ -93,7 +530,227 @@
           "name": "additional_fields",
           "required": false,
           "visible": true,
-          "editable": true
+          "editable": true,
+          "value": {
+            "actions": [
+              {
+                "id": "",
+                "name": "",
+                "enabled": ""
+              }
+            ],
+            "playbooks": [
+              {
+                "playbook_handle": {
+                  "name": "",
+                  "id": {}
+                },
+                "display_name": ""
+              }
+            ],
+            "timer_field_summarized_incident_data": [
+              {
+                "incId": "",
+                "running": "",
+                "fieldName": "",
+                "fieldValue": "",
+                "fieldLabel": "",
+                "sum": ""
+              }
+            ],
+            "addr": "",
+            "city": "",
+            "creator_principal": {
+              "id": "",
+              "type": "",
+              "name": "",
+              "display_name": ""
+            },
+            "crimestatus_id": {
+              "name": "",
+              "id": {}
+            },
+            "employee_involved": "",
+            "exposure_dept_id": {
+              "name": "",
+              "id": {}
+            },
+            "exposure_individual_name": "",
+            "exposure_vendor_id": {
+              "name": "",
+              "id": {}
+            },
+            "incident_type_ids": [],
+            "jurisdiction_name": "",
+            "reporter": "",
+            "start_date": "",
+            "state": {
+              "name": "",
+              "id": {}
+            },
+            "country": {
+              "name": "",
+              "id": {}
+            },
+            "zip": "",
+            "is_scenario": "",
+            "members": [],
+            "negative_pr_likely": "",
+            "perms": {
+              "create_milestones": "",
+              "list_milestones": "",
+              "create_artifacts": "",
+              "list_artifacts": "",
+              "delete": "",
+              "change_workspace": "",
+              "read": "",
+              "write": "",
+              "comment": "",
+              "assign": "",
+              "close": "",
+              "change_members": "",
+              "attach_file": "",
+              "read_attachments": "",
+              "delete_attachments": ""
+            },
+            "confirmed": "",
+            "exposure_type_id": {
+              "name": "",
+              "id": {}
+            },
+            "data_compromised": "",
+            "nist_attack_vectors": [],
+            "workspace": {
+              "name": "",
+              "id": {}
+            },
+            "properties": {
+            },
+            "resolution_id": {
+              "name": "",
+              "id": {}
+            },
+            "resolution_summary": {
+              "format": "",
+              "content": ""
+            },
+            "pii": {
+              "data_compromised": "",
+              "determined_date": "",
+              "harmstatus_id": {
+                "name": "",
+                "id": {}
+              },
+              "data_encrypted": "",
+              "data_contained": "",
+              "impact_likely": "",
+              "data_source_ids": [],
+              "data_format": {
+                "name": "",
+                "id": {}
+              },
+              "assessment": "",
+              "alberta_health_risk_assessment": ""
+            },
+            "gdpr": {
+              "gdpr_breach_circumstances": [],
+              "gdpr_breach_type": {
+                "name": "",
+                "id": {}
+              },
+              "gdpr_personal_data": {
+                "name": "",
+                "id": {}
+              },
+              "gdpr_identification": {
+                "name": "",
+                "id": {}
+              },
+              "gdpr_consequences": {
+                "name": "",
+                "id": {}
+              },
+              "gdpr_final_assessment": {
+                "name": "",
+                "id": {}
+              },
+              "gdpr_breach_type_comment": {
+                "format": "",
+                "content": ""
+              },
+              "gdpr_personal_data_comment": {
+                "format": "",
+                "content": ""
+              },
+              "gdpr_identification_comment": {
+                "format": "",
+                "content": ""
+              },
+              "gdpr_consequences_comment": {
+                "format": "",
+                "content": ""
+              },
+              "gdpr_final_assessment_comment": {
+                "format": "",
+                "content": ""
+              },
+              "gdpr_subsequent_notification": ""
+            },
+            "regulator_risk": {
+              "extension1": ""
+            },
+            "explainability": {
+              "id": "",
+              "context": "",
+              "time_observed": "",
+              "create_date": "",
+              "severity": "",
+              "score": "",
+              "automatic_score": "",
+              "scores": [
+                {
+                  "id": "",
+                  "severity": "",
+                  "score": "",
+                  "automatic_score": "",
+                  "category": "",
+                  "description": "",
+                  "module_name": "",
+                  "rule_id": "",
+                  "rule_name": "",
+                  "rule_link": "",
+                  "rule_metadata": "",
+                  "confidence": "",
+                  "related_score_count": ""
+                }
+              ],
+              "inc_id": "",
+              "finding_id": "",
+              "iart_id": "",
+              "correlation_observable_refs": [],
+              "parent_incident_id": ""
+            },
+            "automatic_score": "",
+            "external_id": "",
+            "id": "",
+            "sequence_code": "",
+            "due_date": "",
+            "create_date": "",
+            "owner_id": {
+              "name": "",
+              "id": {}
+            },
+            "phase_id": {
+              "name": "",
+              "id": {}
+            },
+            "severity_code": {
+              "name": "",
+              "id": {}
+            },
+            "plan_status": "",
+            "inc_training": ""
+          }
         }
       ],
       "output_schema": {}
@@ -107,295 +764,156 @@
       "enabled": true,
       "parameters": [
         {
-          "title": "Severity",
-          "name": "severity",
-          "description": "(Optional) Select the one or more severity of the incident based on which you want to retrieve incidents from IBM Security QRadar SOAR. You can choose from the following options: Low, Medium, or High.",
-          "type": "multiselect",
+          "title": "Filters",
+          "name": "filters",
+          "description": "Specify the filters to apply in the query to retrieve filtered records from IBM Security QRadar SOAR.",
+          "type": "json",
           "visible": true,
           "editable": true,
           "required": false,
-          "tooltip": "(Optional) Select the one or more severity of the incident based on which you want to retrieve incidents from IBM Security QRadar SOAR. You can choose from the following options: Low, Medium, or High.",
-          "options": [
-            "Low",
-            "Medium",
-            "High"
+          "tooltip": "Specify the filters to apply in the query to retrieve filtered records from IBM Security QRadar SOAR.",
+          "value": [
+            {
+              "conditions": [
+                {
+                  "method": "",
+                  "field_name": "",
+                  "value": {},
+                  "value_type": "",
+                  "type": "",
+                  "evaluation_id": ""
+                }
+              ],
+              "logic_type": "",
+              "type_handle": {
+                "name": "",
+                "id": {}
+              }
+            }
           ]
         },
         {
-          "title": "Incident Type",
-          "name": "incident_type",
-          "description": "(Optional) Specify the type of the incident based on which you want to retrieve incidents from IBM Security QRadar SOAR. You can choose from the following options: CommunicationError, DenialOfService, ImproperDisposal:DigitalAsset, etc.",
+          "title": "Include Records",
+          "name": "include_records_total",
+          "description": "Select to include or exclude total count of the incidents that match the given filters in the response. This is set to true by default.",
+          "type": "checkbox",
+          "visible": true,
+          "editable": true,
+          "required": false,
+          "tooltip": "Select to include or exclude total count of the incidents that match the given filters in the response. This is set to true by default.",
+          "value": true
+        },
+        {
+          "title": "Return Level",
+          "name": "return_level",
+          "description": "Select the incident data structure returned. Possible values are Partial, Normal, or Full.",
           "type": "select",
           "visible": true,
           "editable": true,
           "required": false,
-          "tooltip": "(Optional) Specify the type of the incident based on which you want to retrieve incidents from IBM Security QRadar SOAR. You can choose from the following options: CommunicationError, DenialOfService, ImproperDisposal:DigitalAsset, etc.",
+          "tooltip": "Select the incident data structure returned. Possible values are Partial, Normal, or Full.",
           "options": [
-            "CommunicationError",
-            "DenialOfService",
-            "ImproperDisposal:DigitalAsset",
-            "ImproperDisposal:documents/files",
-            "LostDocuments/files/records",
-            "LostPC/laptop/tablet",
-            "LostPDA/smartphone",
-            "LostStorageDevice/media",
-            "Malware",
-            "NotAnIssue",
-            "Other",
-            "Phishing",
-            "StolenDocuments/files/records",
-            "StolenPC/laptop/tablet",
-            "StolenPDA/Smartphone",
-            "StolenStorageDevice/media",
-            "SystemIntrusion",
-            "TBD/Unknown",
-            "Vendor/3rdPartyError"
+            "Partial",
+            "Normal",
+            "Full"
           ]
         },
         {
-          "title": "NIST Attack Vectors",
-          "name": "nist",
-          "description": "(Optional) Specify the nist attack vectors based on which you want to retrieve incidents from IBM Security QRadar SOAR. You can choose from the following options: Attrition, E-mail, External/RemovableMedia, etc.",
-          "type": "select",
+          "title": "Field Handle",
+          "name": "field_handle",
+          "description": "Specify the list of custom fields returned with the incident data.",
+          "type": "text",
           "visible": true,
           "editable": true,
           "required": false,
-          "tooltip": "(Optional) Specify the nist attack vectors based on which you want to retrieve incidents from IBM Security QRadar SOAR. You can choose from the following options: Attrition, E-mail, External/RemovableMedia, etc.",
-          "options": [
-            "Attrition",
-            "E-mail",
-            "External/RemovableMedia",
-            "Impersonation",
-            "ImproperUsage",
-            "Loss/TheftOfEquipment",
-            "Other",
-            "Web"
+          "tooltip": "Specify the list of custom fields returned with the incident data."
+        },
+        {
+          "title": "Length",
+          "name": "length",
+          "description": "The maximum number of records to return in the response. Possible values are: Null or any value less than 1 to retrieve all records, up to the server-configured maximum limit. If the value is greater than 0 and exceeds the server-configured limit, an error will be thrown.",
+          "type": "integer",
+          "visible": true,
+          "editable": true,
+          "required": false,
+          "tooltip": "The maximum number of records to return in the response. Possible values are: Null or any value less than 1 to retrieve all records, up to the server-configured maximum limit. If the value is greater than 0 and exceeds the server-configured limit, an error will be thrown."
+        },
+        {
+          "title": "Start",
+          "name": "start",
+          "description": "Specify the paging to retrieve the first indicator record from IBM Security QRadar SOAR.",
+          "type": "integer",
+          "visible": true,
+          "editable": true,
+          "required": false,
+          "tooltip": "Specify the paging to retrieve the first indicator record from IBM Security QRadar SOAR."
+        },
+        {
+          "title": "Records Total",
+          "name": "recordsTotal",
+          "description": "The total number of records to be fetched for the current query from IBM Security QRadar SOAR.",
+          "type": "integer",
+          "visible": true,
+          "editable": true,
+          "required": false,
+          "tooltip": "The total number of records to be fetched for the current query from IBM Security QRadar SOAR."
+        },
+        {
+          "title": "Sorts",
+          "name": "sorts",
+          "description": "Specify the sorts to apply in the query to retrieve filtered records from IBM Security QRadar SOAR.",
+          "type": "json",
+          "visible": true,
+          "editable": true,
+          "required": false,
+          "tooltip": "Specify the sorts to apply in the query to retrieve filtered records from IBM Security QRadar SOAR.",
+          "value": [
+            {
+              "field_name": "",
+              "type": "",
+              "type_handle": {
+                "name": "",
+                "id": {}
+              }
+            }
           ]
         },
         {
-          "title": "Status",
-          "name": "status",
-          "description": "(Optional) Specify the status of the incident based on which you want to retrieve incidents from IBM Security QRadar SOAR. You can choose from the following options: Active or Closed.",
+          "title": "Logic Type",
+          "name": "logic_type",
+          "description": "Specify the logic type to apply to these filters. Defaults to ANY if logic type is not specified.",
           "type": "select",
           "visible": true,
           "editable": true,
           "required": false,
-          "tooltip": "(Optional) Specify the status of the incident based on which you want to retrieve incidents from IBM Security QRadar SOAR. You can choose from the following options: Active or Closed.",
+          "tooltip": "Specify the logic type to apply to these filters. Defaults to ANY if logic type is not specified.",
           "options": [
-            "Active",
-            "Closed"
+            "ALL",
+            "ANY"
           ]
-        },
-        {
-          "title": "Created After DateTime",
-          "description": "(Optional) Select the DateTime using which you want to filter the result set to only include only those items that have been created after the specified timestamp.",
-          "required": false,
-          "editable": true,
-          "visible": true,
-          "type": "datetime",
-          "name": "date_created_after",
-          "tooltip": "(Optional) Select the DateTime using which you want to filter the result set to only include only those items that have been created after the specified timestamp."
-        },
-        {
-          "title": "Created Before DateTime",
-          "description": "(Optional) Select the DateTime using which you want to filter the result set to only include only those items that have been created before the specified timestamp.",
-          "required": false,
-          "editable": true,
-          "visible": true,
-          "type": "datetime",
-          "name": "date_created_before",
-          "tooltip": "(Optional) Select the DateTime using which you want to filter the result set to only include only those items that have been created before the specified timestamp."
-        },
-        {
-          "title": "Created within the Last TimeFrame",
-          "description": "(Optional) Specify the time frame to search within for incident. Should be given with \"Occurred within the Last TimeFrame\" and  \"Due TimeFrame\" parameters. Possible values are: Days, Hours, or Minutes.",
-          "required": false,
-          "editable": true,
-          "visible": true,
-          "type": "select",
-          "name": "created_timeframe",
-          "options": [
-            "Days",
-            "Hours",
-            "Minutes"
-          ],
-          "tooltip": "(Optional) Specify the time frame to search within for incident. Should be given with \"Occurred within the Last TimeFrame\" and  \"Due TimeFrame\" parameters. Possible values are: Days, Hours, or Minutes.",
-          "onchange": {
-            "Days": [
-              {
-                "title": "Created within Days",
-                "description": "Specify the created date of the incident within the last time frame \"Days\".",
-                "required": true,
-                "editable": true,
-                "visible": true,
-                "type": "integer",
-                "name": "date_created_within_the_last",
-                "tooltip": "Specify the created date of the incident within the last time frame \"Days\"."
-              }
-            ],
-            "Hours": [
-              {
-                "title": "Created within Hours",
-                "description": "Specify the created date of the incident within the last time frame \"Hours\".",
-                "required": true,
-                "editable": true,
-                "visible": true,
-                "type": "integer",
-                "name": "date_created_within_the_last",
-                "tooltip": "Specify the created date of the incident within the last time frame \"Hours\"."
-              }
-            ],
-            "Minutes": [
-              {
-                "title": "Created within Minutes",
-                "description": "Specify the created date of the incident within the last time frame \"Minutes\".",
-                "required": true,
-                "editable": true,
-                "visible": true,
-                "type": "integer",
-                "name": "date_created_within_the_last",
-                "tooltip": "Specify the created date of the incident within the last time frame \"Minutes\""
-              }
-            ]
-          }
-        },
-        {
-          "title": "Occurred After DateTime",
-          "description": "(Optional) Select the DateTime using which you want to filter the result set to only include only those items that have been occurred after the specified timestamp.",
-          "required": false,
-          "editable": true,
-          "visible": true,
-          "type": "datetime",
-          "name": "date_occurred_after",
-          "tooltip": "(Optional) Select the DateTime using which you want to filter the result set to only include only those items that have been occurred after the specified timestamp."
-        },
-        {
-          "title": "Occurred Before",
-          "description": "(Optional) Select the DateTime using which you want to filter the result set to only include only those items that have been occurred before the specified timestamp.",
-          "required": false,
-          "editable": true,
-          "visible": true,
-          "type": "datetime",
-          "name": "date_occurred_before",
-          "tooltip": "(Optional) Select the DateTime using which you want to filter the result set to only include only those items that have been occurred before the specified timestamp."
-        },
-        {
-          "title": "Occurred within the Last TimeFrame",
-          "description": "(Optional) Specify the time frame to search within for incident. Possible values are: Days, Hours, or Minutes.",
-          "required": false,
-          "editable": true,
-          "visible": true,
-          "type": "select",
-          "name": "occurred_timeframe",
-          "options": [
-            "Days",
-            "Hours",
-            "Minutes"
-          ],
-          "tooltip": "(Optional) Specify the time frame to search within for incident. Possible values are: Days, Hours, or Minutes.",
-          "onchange": {
-            "Days": [
-              {
-                "title": "Occurred within Days",
-                "description": "Specify the occurred date of the incident within the last time frame \"Days\".",
-                "required": true,
-                "editable": true,
-                "visible": true,
-                "type": "integer",
-                "name": "date_occurred_within_the_last",
-                "tooltip": "Specify the occurred date of the incident within the last time frame \"Days\"."
-              }
-            ],
-            "Hours": [
-              {
-                "title": "Occurred within Hours",
-                "description": "Specify the occurred date of the incident within the last time frame \"Hours\".",
-                "required": true,
-                "editable": true,
-                "visible": true,
-                "type": "integer",
-                "name": "date_occurred_within_the_last",
-                "tooltip": "Specify the occurred date of the incident within the last time frame \"Hours\"."
-              }
-            ],
-            "Minutes": [
-              {
-                "title": "Occurred within Minutes",
-                "description": "Specify the occurred date of the incident within the last time frame \"Minutes\".",
-                "required": true,
-                "editable": true,
-                "visible": true,
-                "type": "integer",
-                "name": "date_occurred_within_the_last",
-                "tooltip": "Specify the occurred date of the incident within the last time frame \"Minutes\"."
-              }
-            ]
-          }
-        },
-        {
-          "title": "Due TimeFrame",
-          "description": "(Optional) Specify the time frame to search within for incident. Possible values are: Days, Hours, or Minutes.",
-          "required": false,
-          "editable": true,
-          "visible": true,
-          "type": "select",
-          "name": "due_timeframe",
-          "options": [
-            "Days",
-            "Hours",
-            "Minutes"
-          ],
-          "tooltip": "(Optional) Specify the time frame to search within for incident. Possible values are: Days, Hours, or Minutes.",
-          "onchange": {
-            "Days": [
-              {
-                "title": "Due within Days",
-                "description": "Specify the due date of the incident in given time frame \"Days\".",
-                "required": true,
-                "editable": true,
-                "visible": true,
-                "type": "integer",
-                "name": "due_in",
-                "tooltip": "Specify the due date of the incident in given time frame \"Days\"."
-              }
-            ],
-            "Hours": [
-              {
-                "title": "Due within Hours",
-                "description": "Specify the due date of the incident in given time frame \"Hours\".",
-                "required": true,
-                "editable": true,
-                "visible": true,
-                "type": "integer",
-                "name": "due_in",
-                "tooltip": "Specify the due date of the incident in given time frame \"Hours\"."
-              }
-            ],
-            "Minutes": [
-              {
-                "title": "Due within Minutes",
-                "description": "Specify the due date of the incident in given time frame \"Minutes\".",
-                "required": true,
-                "editable": true,
-                "visible": true,
-                "type": "integer",
-                "name": "due_in",
-                "tooltip": "Specify the due date of the incident in given time frame \"Minutes\"."
-              }
-            ]
-          }
         }
       ],
       "output_schema": {}
     },
     {
-      "operation": "get_open_incidents",
-      "title": "Get Open Incidents",
-      "description": "Retrieves all open incidents from IBM Security QRadar SOAR.",
+      "operation": "get_incident_simulations",
+      "title": "Get Incidents Simulations",
+      "description": "Retrieve a list of simulations from IBM Security QRadar SOAR.",
       "category": "investigation",
-      "annotation": "get_open_incidents",
+      "annotation": "get_incident_simulations",
       "enabled": true,
-      "parameters": [],
+      "parameters": [
+        {
+          "title": "Want Closed",
+          "description": "Select this option, if closed simulations are to be returned (as well as open ones), otherwise it will return only open simulations.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "type": "checkbox",
+          "name": "want_closed",
+          "tooltip": "Select this option, if closed simulations are to be returned (as well as open ones), otherwise it will return only open simulations."
+        }
+      ],
       "output_schema": {}
     },
     {
@@ -415,6 +933,70 @@
           "editable": true,
           "required": true,
           "tooltip": "Specify the incident ID to retrieve its details from IBM Security QRadar SOAR."
+        },
+        {
+          "title": "Version",
+          "name": "vers",
+          "description": "Specify the latest version that the client already has. If the server hasn't changed since that version then an \"HTTP 304 Not Modified\" will be returned.",
+          "type": "integer",
+          "visible": true,
+          "editable": true,
+          "required": false,
+          "tooltip": "Specify the latest version that the client already has. If the server hasn't changed since that version then an \"HTTP 304 Not Modified\" will be returned."
+        },
+        {
+          "title": "Include Findings",
+          "name": "want_findings",
+          "description": "Determines whether the findings of an incident will be returned. If this value is true, the findings will be returned. The default is to return the findings.",
+          "type": "checkbox",
+          "visible": true,
+          "editable": true,
+          "required": false,
+          "tooltip": "Determines whether the findings of an incident will be returned. If this value is true, the findings will be returned. The default is to return the findings.",
+          "value": true
+        }
+      ],
+      "output_schema": {}
+    },
+    {
+      "operation": "get_incident_tasks",
+      "title": "Get Incident Tasks",
+      "description": "Retrieve a list of tasks for the incident from IBM Security QRadar SOAR.",
+      "category": "investigation",
+      "annotation": "get_incident_tasks",
+      "enabled": true,
+      "parameters": [
+        {
+          "title": "Incident ID",
+          "name": "incident_id",
+          "description": "Specify the incident ID to retrieve its details from IBM Security QRadar SOAR.",
+          "type": "text",
+          "visible": true,
+          "editable": true,
+          "required": true,
+          "tooltip": "Specify the incident ID to retrieve its details from IBM Security QRadar SOAR."
+        },
+        {
+          "title": "Want Layouts",
+          "description": "Select this option, if tasks layout property gets filled in also. By default it set as false.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "type": "checkbox",
+          "name": "want_layouts",
+          "tooltip": "Select this option, if tasks layout property gets filled in also. By default it set as false.",
+          "value": false
+        },
+        {
+          "title": "Want Notes",
+          "description": "Select this option, if tasks note property gets filled in also. By default it set as false.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "type": "checkbox",
+          "name": "want_notes",
+          "tooltip": "Select this option, if tasks note property gets filled in also. By default it set as false.",
+          "value": false
         }
       ],
       "output_schema": {}
@@ -438,126 +1020,38 @@
           "tooltip": "Specify the ID of the incident to update in IBM Security QRadar SOAR."
         },
         {
-          "title": "Incident Name",
-          "name": "name",
-          "description": "(Optional) Specify the name of the incident to update in IBM Security QRadar SOAR.",
-          "type": "text",
-          "visible": true,
-          "editable": true,
-          "required": false,
-          "tooltip": "(Optional) Specify the name of the incident to update in IBM Security QRadar SOAR."
-        },
-        {
-          "title": "Description",
-          "name": "description",
-          "description": "(Optional) Specify a description of the incident to update in IBM Security QRadar SOAR.",
-          "type": "text",
-          "visible": true,
-          "editable": true,
-          "required": false,
-          "tooltip": "(Optional) Specify a description of the incident to update in IBM Security QRadar SOAR."
-        },
-        {
-          "title": "Severity",
-          "name": "severity",
-          "description": "(Optional) Specify the severity of the incident to update in IBM Security QRadar SOAR. You can choose from the following options: Low, Medium, or High.",
-          "type": "select",
-          "visible": true,
-          "editable": true,
-          "required": false,
-          "tooltip": "(Optional) Specify the severity of the incident to update in IBM Security QRadar SOAR. You can choose from the following options: Low, Medium, or High.",
-          "options": [
-            "Low",
-            "Medium",
-            "High"
-          ]
-        },
-        {
-          "title": "Incident Type",
-          "name": "incident_type",
-          "description": "(Optional) Specify the type of the incident to update in IBM Security QRadar SOAR. You can choose from the following options: CommunicationError, DenialOfService, ImproperDisposal:DigitalAsset, etc.",
-          "type": "select",
-          "visible": true,
-          "editable": true,
-          "required": false,
-          "tooltip": "(Optional) Specify the type of the incident to update in IBM Security QRadar SOAR. You can choose from the following options: CommunicationError, DenialOfService, ImproperDisposal:DigitalAsset, etc.",
-          "options": [
-            "CommunicationError",
-            "DenialOfService",
-            "ImproperDisposal:DigitalAsset",
-            "ImproperDisposal:documents/files",
-            "LostDocuments/files/records",
-            "LostPC/laptop/tablet",
-            "LostPDA/smartphone",
-            "LostStorageDevice/media",
-            "Malware",
-            "NotAnIssue",
-            "Other",
-            "Phishing",
-            "StolenDocuments/files/records",
-            "StolenPC/laptop/tablet",
-            "StolenPDA/Smartphone",
-            "StolenStorageDevice/media",
-            "SystemIntrusion",
-            "TBD/Unknown",
-            "Vendor/3rdPartyError"
-          ]
-        },
-        {
-          "title": "NIST Attack Vectors",
-          "name": "nist",
-          "description": "(Optional) Specify the nist attack vectors to update in IBM Security QRadar SOAR. You can choose from the following options: Attrition, E-mail, External/RemovableMedia, etc.",
-          "type": "select",
-          "visible": true,
-          "editable": true,
-          "required": false,
-          "tooltip": "(Optional) Specify the nist attack vectors to update in IBM Security QRadar SOAR. You can choose from the following options: Attrition, E-mail, External/RemovableMedia, etc.",
-          "options": [
-            "Attrition",
-            "E-mail",
-            "External/RemovableMedia",
-            "Impersonation",
-            "ImproperUsage",
-            "Loss/TheftOfEquipment",
-            "Other",
-            "Web"
-          ]
-        },
-        {
-          "title": "Resolution",
-          "name": "resolution",
-          "description": "(Optional) Specify the resolution to update in IBM Security QRadar SOAR. You can choose from the following options: Unresolved, Duplicate, Not an Issue, or Resolved.",
-          "type": "select",
-          "visible": true,
-          "editable": true,
-          "required": false,
-          "tooltip": "(Optional) Specify the resolution to update in IBM Security QRadar SOAR. You can choose from the following options: Unresolved, Duplicate, Not an Issue, or Resolved.",
-          "options": [
-            "Unresolved",
-            "Duplicate",
-            "Not an Issue",
-            "Resolved"
-          ]
-        },
-        {
-          "title": "Resolution Summary",
-          "name": "resolution_summary",
-          "description": "(Optional) Specify a summary of the resolution to update in IBM Security QRadar SOAR.",
-          "type": "text",
-          "visible": true,
-          "editable": true,
-          "required": false,
-          "tooltip": "(Optional) Specify a summary of the resolution to update in IBM Security QRadar SOAR."
-        },
-        {
-          "title": "Custom Properties",
-          "description": "(Optional) Specify the additional properties, in the JSON format, that you want to specify for the incident being updated in IBM Security QRadar SOAR. The additional properties signify additional fields associated with the incident.",
-          "tooltip": "(Optional) Specify the additional properties, in the JSON format, that you want to specify for the incident being updated in IBM Security QRadar SOAR. The additional properties signify additional fields associated with the incident.",
+          "title": "Changes",
+          "name": "changes",
+          "description": "Specify the list of changes to apply to the database object.",
           "type": "json",
-          "name": "additional_fields",
-          "required": false,
           "visible": true,
-          "editable": true
+          "editable": true,
+          "required": false,
+          "tooltip": "Specify the list of changes to apply to the database object.",
+          "value": [
+            {
+              "field": {
+                "name": "",
+                "id": {}
+              },
+              "old_value": {
+                "object": {}
+              },
+              "new_value": {
+                "object": {}
+              }
+            }
+          ]
+        },
+        {
+          "title": "Version",
+          "name": "version",
+          "description": "Specify the version of the object as you know it to be. If the version number matches, the PATCH changes are accepted without conflict checking.",
+          "type": "integer",
+          "visible": true,
+          "editable": true,
+          "required": false,
+          "tooltip": "Specify the version of the object as you know it to be. If the version number matches, the PATCH changes are accepted without conflict checking."
         }
       ],
       "output_schema": {}
@@ -582,6 +1076,284 @@
         }
       ],
       "output_schema": {}
+    },
+    {
+      "title": "Get Incident Artifacts",
+      "operation": "get_incident_artifacts",
+      "category": "investigation",
+      "annotation": "get_incident_artifacts",
+      "enabled": true,
+      "description": "Retrieves all artifacts that are associated with an incidents from IBM Security QRadar SOAR based on the input parameters you have specified.",
+      "parameters": [
+        {
+          "title": "Incident ID",
+          "description": "Specify the ID of the incident to retrieve it's artifacts from IBM Security QRadar SOAR.",
+          "type": "text",
+          "name": "incident_id",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the ID of the incident to retrieve it's artifacts from IBM Security QRadar SOAR."
+        },
+        {
+          "title": "Filters",
+          "description": "Specify the filters to apply in the query to retrieve filtered records from IBM Security QRadar SOAR.",
+          "type": "json",
+          "name": "filters",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "value": [
+            {
+              "conditions": [
+                {
+                  "method": "",
+                  "field_name": "",
+                  "value": {},
+                  "value_type": "",
+                  "type": "",
+                  "evaluation_id": ""
+                }
+              ],
+              "logic_type": "",
+              "type_handle": {
+                "name": "",
+                "id": {}
+              }
+            }
+          ],
+          "tooltip": "Specify the filters to apply in the query to retrieve filtered records from IBM Security QRadar SOAR."
+        },
+        {
+          "title": "Include Records",
+          "description": "Select to include or exclude total count of the incidents that match the given filters in the response. This is set to true by default.",
+          "type": "checkbox",
+          "name": "include_records_total",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "value": true,
+          "tooltip": "Select to include or exclude total count of the incidents that match the given filters in the response. This is set to true by default."
+        },
+        {
+          "title": "Return Level",
+          "description": "Select the incident data structure returned. Possible values are Partial, Normal, or Full.",
+          "type": "select",
+          "name": "return_level",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Select the incident data structure returned. Possible values are Partial, Normal, or Full.",
+          "options": [
+            "Partial",
+            "Normal",
+            "Full"
+          ]
+        },
+        {
+          "title": "Field Handle",
+          "description": "Specify the list of custom fields returned with the incident data.",
+          "type": "text",
+          "name": "field_handle",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the list of custom fields returned with the incident data."
+        },
+        {
+          "title": "Start",
+          "description": "Specify the paging to retrieve the first indicator record from IBM Security QRadar SOAR.",
+          "type": "integer",
+          "name": "start",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the paging to retrieve the first indicator record from IBM Security QRadar SOAR."
+        },
+        {
+          "title": "Length",
+          "description": "The maximum number of records to return in the response. Possible values are: Null or any value less than 1 to retrieve all records, up to the server-configured maximum limit. If the value is greater than 0 and exceeds the server-configured limit, an error will be thrown.",
+          "type": "integer",
+          "name": "length",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "The maximum number of records to return in the response. Possible values are: Null or any value less than 1 to retrieve all records, up to the server-configured maximum limit. If the value is greater than 0 and exceeds the server-configured limit, an error will be thrown."
+        },
+        {
+          "title": "Records Total",
+          "description": "The total number of records to be fetched for the current query from IBM Security QRadar SOAR.",
+          "type": "integer",
+          "name": "recordsTotal",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "The total number of records to be fetched for the current query from IBM Security QRadar SOAR."
+        },
+        {
+          "title": "Sorts",
+          "description": "Specify the sorts to apply in the query to retrieve filtered records from IBM Security QRadar SOAR.",
+          "type": "json",
+          "name": "sorts",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "value": [
+            {
+              "field_name": "",
+              "type": "",
+              "type_handle": {
+                "name": "",
+                "id": {}
+              }
+            }
+          ],
+          "tooltip": "Specify the sorts to apply in the query to retrieve filtered records from IBM Security QRadar SOAR."
+        },
+        {
+          "title": "Logic Type",
+          "description": "Specify the logic type to apply to these filters. Defaults to ANY if logic type is not specified.",
+          "type": "select",
+          "name": "logic_type",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the logic type to apply to these filters. Defaults to ANY if logic type is not specified.",
+          "options": [
+            "ALL",
+            "ANY"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Get Incident Notes",
+      "operation": "get_incident_notes",
+      "category": "investigation",
+      "annotation": "get_incident_notes",
+      "enabled": true,
+      "description": "Retrieves all the notes associated with an incident from IBM Security QRadar SOAR based on the incident ID that you have specified.",
+      "parameters": [
+        {
+          "title": "Incident ID",
+          "description": "Specify the ID of the incident to retrieve notes from IBM Security QRadar SOAR.",
+          "type": "text",
+          "name": "incident_id",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the ID of the incident to retrieve notes from IBM Security QRadar SOAR."
+        }
+      ]
+    },
+    {
+      "title": "Get Incident Attachments",
+      "operation": "get_incident_attachments",
+      "category": "investigation",
+      "annotation": "get_incident_attachments",
+      "enabled": true,
+      "description": "Retrieves all the attachments associated with an incident from IBM Security QRadar SOAR based on the incident ID that you have specified.",
+      "parameters": [
+        {
+          "title": "Incident ID",
+          "description": "Specify the ID of the incident to retrieve attachments from IBM Security QRadar SOAR.",
+          "type": "text",
+          "name": "incident_id",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the ID of the incident to retrieve attachments from IBM Security QRadar SOAR."
+        }
+      ]
+    },
+    {
+      "title": "Get Incident Attachment Details",
+      "operation": "get_incident_attachment_details",
+      "category": "investigation",
+      "annotation": "get_incident_attachment_details",
+      "enabled": true,
+      "description": "Retrieves all the attachment details associated with an incident from IBM Security QRadar SOAR based on the incident ID that you have specified.",
+      "parameters": [
+        {
+          "title": "Incident ID",
+          "description": "Specify the ID of the incident to retrieve attachments from IBM Security QRadar SOAR.",
+          "type": "text",
+          "name": "incidentID",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the ID of the incident to retrieve attachments from IBM Security QRadar SOAR."
+        }
+      ]
+    },
+    {
+      "title": "Get All Incident Details",
+      "operation": "get_all_incident_details",
+      "category": "investigation",
+      "annotation": "get_all_incident_details",
+      "enabled": true,
+      "description": "Retrieves all details associated with an incident from IBM Security QRadar SOAR based on the incident ID that you have specified.",
+      "parameters": [
+        {
+          "title": "Incident ID",
+          "description": "Specify the ID of the incident to retrieve it's details from IBM Security QRadar SOAR.",
+          "type": "text",
+          "name": "incidentID",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the ID of the incident to retrieve it's details from IBM Security QRadar SOAR."
+        },
+        {
+          "title": "Filters",
+          "description": "Specify the filters to apply in the query to retrieve filtered records from IBM Security QRadar SOAR.",
+          "type": "json",
+          "name": "filters",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "value": [
+            {
+              "conditions": [
+                {
+                  "method": "",
+                  "field_name": "",
+                  "value": {},
+                  "value_type": "",
+                  "type": "",
+                  "evaluation_id": ""
+                }
+              ],
+              "logic_type": "",
+              "type_handle": {
+                "name": "",
+                "id": {}
+              }
+            }
+          ],
+          "tooltip": "Specify the filters to apply in the query to retrieve filtered records from IBM Security QRadar SOAR."
+        },
+        {
+          "title": "Start",
+          "description": "Specify the paging to retrieve the first indicator record from IBM Security QRadar SOAR.",
+          "type": "integer",
+          "name": "start",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the paging to retrieve the first indicator record from IBM Security QRadar SOAR."
+        },
+        {
+          "title": "Length",
+          "description": "The maximum number of records to return in the response. Possible values are: Null or any value less than 1 to retrieve all records, up to the server-configured maximum limit. If the value is greater than 0 and exceeds the server-configured limit, an error will be thrown.",
+          "type": "integer",
+          "name": "length",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "The maximum number of records to return in the response. Possible values are: Null or any value less than 1 to retrieve all records, up to the server-configured maximum limit. If the value is greater than 0 and exceeds the server-configured limit, an error will be thrown."
+        }
+      ]
     }
   ]
 }

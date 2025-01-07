@@ -3,12 +3,12 @@
   "data": [
     {
       "@type": "WorkflowCollection",
-      "name": "Sample - IBM Security QRadar SOAR - 1.0.0",
+      "name": "Sample - IBM Security QRadar SOAR - 1.1.0",
       "description": "Sample playbooks for \"IBM Security QRadar SOAR\" connector. If you are planning to use any of the sample playbooks in your environment, ensure that you clone those playbooks and move them to a different collection, since the sample playbook collection gets deleted during connector upgrade and delete.",
       "visible": true,
       "image": null,
       "uuid": "778a1986-29b8-4e93-8539-3736d7d34331",
-      "id": 91,
+      "id": 57,
       "deletedAt": null,
       "importedBy": [],
       "recordTags": [
@@ -29,10 +29,10 @@
           "remoteExecutableFlag": false,
           "parameters": [],
           "synchronous": false,
-          "lastModifyDate": null,
+          "lastModifyDate": 1729682940,
           "collection": "/api/3/workflow_collections/778a1986-29b8-4e93-8539-3736d7d34331",
           "versions": [],
-          "triggerStep": "/api/3/workflow_steps/373636d6-1efc-462d-8169-1af0449dc0ff",
+          "triggerStep": "/api/3/workflow_steps/be688d9b-a762-4e0e-af57-de42484dece8",
           "steps": [
             {
               "@type": "WorkflowStep",
@@ -40,57 +40,423 @@
               "description": null,
               "arguments": {
                 "name": "IBM Security QRadar SOAR",
-                "config": "",
+                "config": "3017f47c-d68b-4682-b16d-014799c23589",
                 "params": {
-                  "incident_id": ""
+                  "vers": "",
+                  "incident_id": "1",
+                  "want_findings": true
                 },
-                "version": "1.0.0",
-                "connector": "ibm-soar",
+                "version": "1.1.0",
+                "connector": "ibm-security-qradar-soar",
                 "operation": "get_incident_details",
-                "operationTitle": "Get Incident Details"
+                "operationTitle": "Get Incident Details",
+                "pickFromTenant": false,
+                "step_variables": []
               },
               "status": null,
-              "top": "120",
-              "left": "188",
+              "top": "165",
+              "left": "125",
               "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
               "group": null,
-              "uuid": "6dc492f1-99f0-4080-8bfd-9c52bf27bc9c"
+              "uuid": "3a5fd7ab-d5d3-466f-abfa-0cb285fa329f"
             },
             {
               "@type": "WorkflowStep",
               "name": "Start",
               "description": null,
               "arguments": {
+                "route": "56fea881-a410-433b-b8d3-5a26f120d765",
+                "title": "IBM Security QRadar SOAR: Get Incident Details",
+                "resources": [
+                  "alerts"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
                 "step_variables": {
                   "input": {
-                    "params": []
+                    "params": [],
+                    "records": "{{vars.input.records}}"
                   }
-                }
+                },
+                "triggerOnSource": true,
+                "executeButtonText": "Execute",
+                "noRecordExecution": true,
+                "showToasterMessage": {
+                  "visible": false,
+                  "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
               },
               "status": null,
-              "top": "20",
-              "left": "20",
-              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "top": "30",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
               "group": null,
-              "uuid": "373636d6-1efc-462d-8169-1af0449dc0ff"
+              "uuid": "be688d9b-a762-4e0e-af57-de42484dece8"
             }
           ],
           "routes": [
             {
               "@type": "WorkflowRoute",
-              "name": "Start-> Get Incident Details",
-              "targetStep": "/api/3/workflow_steps/6dc492f1-99f0-4080-8bfd-9c52bf27bc9c",
-              "sourceStep": "/api/3/workflow_steps/373636d6-1efc-462d-8169-1af0449dc0ff",
+              "name": "Start -> Get Incident Details",
+              "targetStep": "/api/3/workflow_steps/3a5fd7ab-d5d3-466f-abfa-0cb285fa329f",
+              "sourceStep": "/api/3/workflow_steps/be688d9b-a762-4e0e-af57-de42484dece8",
               "label": null,
               "isExecuted": false,
               "group": null,
-              "uuid": "d74daa7f-987c-4bed-b0c7-ab82b7bbe947"
+              "uuid": "bc23008f-be18-4cd4-9b55-c8f58a53d1e4"
             }
           ],
           "groups": [],
           "priority": null,
           "uuid": "20280fe4-a12e-43d8-8d6c-a81f69c43fa0",
-          "id": 1009,
+          "id": 778,
+          "owners": [],
+          "isPrivate": false,
+          "deletedAt": null,
+          "importedBy": [],
+          "recordTags": [
+            "IBM",
+            "ibm-security-qradar-soar"
+          ]
+        },
+        {
+          "@type": "Workflow",
+          "triggerLimit": null,
+          "name": "Get Incident Tasks",
+          "aliasName": null,
+          "tag": null,
+          "description": "Retrieve a list of tasks for the incident from IBM Security QRadar SOAR.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": false,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1730703904,
+          "collection": "/api/3/workflow_collections/778a1986-29b8-4e93-8539-3736d7d34331",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/ad1b587e-1474-4095-99fd-cc473a57054f",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Get Incident Tasks",
+              "description": null,
+              "arguments": {
+                "name": "IBM Security QRadar SOAR",
+                "config": "a7924db7-47b9-4eaf-bfb6-61675fcafaf8",
+                "params": {
+                  "want_notes": false,
+                  "incident_id": "",
+                  "want_layouts": false
+                },
+                "version": "1.1.0",
+                "connector": "ibm-security-qradar-soar",
+                "operation": "get_incident_tasks",
+                "operationTitle": "Get Incident Tasks",
+                "pickFromTenant": false,
+                "step_variables": []
+              },
+              "status": null,
+              "top": "165",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "6019f478-4c7a-4b6c-8036-9814a959bdad"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "route": "f0d12ff0-76f3-4e04-80b2-c2b4c1e4e8d1",
+                "title": "IBM Security QRadar SOAR: Get Incident Tasks",
+                "resources": [
+                  "alerts"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                  "input": {
+                    "params": [],
+                    "records": "{{vars.input.records}}"
+                  }
+                },
+                "triggerOnSource": true,
+                "executeButtonText": "Execute",
+                "noRecordExecution": true,
+                "showToasterMessage": {
+                  "visible": false,
+                  "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
+              },
+              "status": null,
+              "top": "30",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+              "group": null,
+              "uuid": "ad1b587e-1474-4095-99fd-cc473a57054f"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Get Incident Tasks",
+              "targetStep": "/api/3/workflow_steps/6019f478-4c7a-4b6c-8036-9814a959bdad",
+              "sourceStep": "/api/3/workflow_steps/ad1b587e-1474-4095-99fd-cc473a57054f",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "42dc62cf-2998-4ac9-8293-01a70f8526e6"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+          "uuid": "711463df-16c5-486c-8f1b-b872dfb61754",
+          "id": 779,
+          "owners": [],
+          "isPrivate": false,
+          "deletedAt": null,
+          "importedBy": [],
+          "recordTags": [
+            "IBM",
+            "ibm-security-qradar-soar"
+          ]
+        },
+        {
+          "@type": "Workflow",
+          "triggerLimit": null,
+          "name": "Get Incident Artifacts",
+          "aliasName": null,
+          "tag": null,
+          "description": "Retrieves all artifacts that are associated with an incidents from IBM Security QRadar SOAR based on the input parameters you have specified.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": false,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1735724621,
+          "collection": "/api/3/workflow_collections/778a1986-29b8-4e93-8539-3736d7d34331",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/64e99157-30d3-4182-8fc1-7c52af462888",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Get Incident Artifacts",
+              "description": null,
+              "arguments": {
+                "name": "IBM Security QRadar SOAR",
+                "config": "d5e6a7d1-4337-4a6b-95f9-597074e3c7a1",
+                "params": {
+                  "sorts": [
+                    {
+                      "type": "",
+                      "field_name": "",
+                      "type_handle": {
+                        "id": [],
+                        "name": ""
+                      }
+                    }
+                  ],
+                  "start": "",
+                  "length": "",
+                  "filters": [
+                    {
+                      "conditions": [
+                        {
+                          "type": "",
+                          "value": [],
+                          "method": "",
+                          "field_name": "",
+                          "value_type": "",
+                          "evaluation_id": ""
+                        }
+                      ],
+                      "logic_type": "",
+                      "type_handle": {
+                        "id": [],
+                        "name": ""
+                      }
+                    }
+                  ],
+                  "incident_id": "1",
+                  "field_handle": "",
+                  "recordsTotal": "",
+                  "include_records_total": true
+                },
+                "version": "1.1.0",
+                "connector": "ibm-security-qradar-soar",
+                "operation": "get_incident_artifacts",
+                "operationTitle": "Get Incident Artifacts",
+                "pickFromTenant": false,
+                "step_variables": []
+              },
+              "status": null,
+              "top": "165",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "1c692e9c-24d6-4ed4-b9df-2ab53e9fe7fe"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "route": "b4e22480-5640-4323-b3a1-b11a1189eeb0",
+                "title": "IBM Security QRadar SOAR: Get Incident Artifacts",
+                "resources": [
+                  "alerts"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                  "input": {
+                    "params": [],
+                    "records": "{{vars.input.records}}"
+                  }
+                },
+                "triggerOnSource": true,
+                "executeButtonText": "Execute",
+                "noRecordExecution": true,
+                "showToasterMessage": {
+                  "visible": false,
+                  "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
+              },
+              "status": null,
+              "top": "30",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+              "group": null,
+              "uuid": "64e99157-30d3-4182-8fc1-7c52af462888"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Get Incident Artifacts",
+              "targetStep": "/api/3/workflow_steps/1c692e9c-24d6-4ed4-b9df-2ab53e9fe7fe",
+              "sourceStep": "/api/3/workflow_steps/64e99157-30d3-4182-8fc1-7c52af462888",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "62c07869-b227-44e4-b462-129798341c3f"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+          "uuid": "7366a658-f095-4293-b513-a4827ca5519d",
+          "id": 785,
+          "owners": [],
+          "isPrivate": false,
+          "deletedAt": null,
+          "importedBy": [],
+          "recordTags": [
+            "IBM",
+            "ibm-security-qradar-soar"
+          ]
+        },
+        {
+          "@type": "Workflow",
+          "triggerLimit": null,
+          "name": "Get Incident Notes",
+          "aliasName": null,
+          "tag": null,
+          "description": "Retrieves all the notes associated with an incident from IBM Security QRadar SOAR based on the incident ID that you have specified.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": false,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1735724681,
+          "collection": "/api/3/workflow_collections/778a1986-29b8-4e93-8539-3736d7d34331",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/34fddcb9-3639-45ce-86b8-bf140eeb0a5d",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Get Incident Notes",
+              "description": null,
+              "arguments": {
+                "name": "IBM Security QRadar SOAR",
+                "config": "d5e6a7d1-4337-4a6b-95f9-597074e3c7a1",
+                "params": {
+                  "incident_id": "1"
+                },
+                "version": "1.1.0",
+                "connector": "ibm-security-qradar-soar",
+                "operation": "get_incident_notes",
+                "operationTitle": "Get Incident Notes",
+                "pickFromTenant": false,
+                "step_variables": []
+              },
+              "status": null,
+              "top": "165",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "e988e9ac-26e3-402b-b184-1c9ffe9d214b"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "route": "cd2b6eaf-17d1-487e-bc28-92cfba8a3eec",
+                "title": "IBM Security QRadar SOAR: Get Incident Notes",
+                "resources": [
+                  "alerts"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                  "input": {
+                    "params": [],
+                    "records": "{{vars.input.records}}"
+                  }
+                },
+                "triggerOnSource": true,
+                "executeButtonText": "Execute",
+                "noRecordExecution": true,
+                "showToasterMessage": {
+                  "visible": false,
+                  "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
+              },
+              "status": null,
+              "top": "30",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+              "group": null,
+              "uuid": "34fddcb9-3639-45ce-86b8-bf140eeb0a5d"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Get Incident Notes",
+              "targetStep": "/api/3/workflow_steps/e988e9ac-26e3-402b-b184-1c9ffe9d214b",
+              "sourceStep": "/api/3/workflow_steps/34fddcb9-3639-45ce-86b8-bf140eeb0a5d",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "15d57e19-3723-43ab-9f8c-e7e2c9ef3aac"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+          "uuid": "8da38106-b0a2-42fa-84f3-63d3abecdd21",
+          "id": 786,
           "owners": [],
           "isPrivate": false,
           "deletedAt": null,
@@ -113,10 +479,10 @@
           "remoteExecutableFlag": false,
           "parameters": [],
           "synchronous": false,
-          "lastModifyDate": null,
+          "lastModifyDate": 1729682860,
           "collection": "/api/3/workflow_collections/778a1986-29b8-4e93-8539-3736d7d34331",
           "versions": [],
-          "triggerStep": "/api/3/workflow_steps/8b26ec36-da28-4d16-b2c6-c9a61985d098",
+          "triggerStep": "/api/3/workflow_steps/22d6d392-8f47-4f3f-950a-76a7315dda00",
           "steps": [
             {
               "@type": "WorkflowStep",
@@ -124,58 +490,616 @@
               "description": null,
               "arguments": {
                 "name": "IBM Security QRadar SOAR",
-                "config": "",
+                "config": "3017f47c-d68b-4682-b16d-014799c23589",
                 "params": {
-                  "incident_name": "",
-                  "additional_fields": ""
+                  "cm": {
+                    "total": "",
+                    "geo_counts": [],
+                    "unassigneds": [
+                      {
+                        "geo": [],
+                        "count": ""
+                      }
+                    ]
+                  },
+                  "dtm": {
+                    "First Name": true
+                  },
+                  "name": "Incident",
+                  "hipaa": {
+                    "hipaa_breach": true,
+                    "hipaa_adverse": true,
+                    "hipaa_misused": true,
+                    "hipaa_acquired": true,
+                    "hipaa_breach_comment": "",
+                    "hipaa_adverse_comment": "",
+                    "hipaa_misused_comment": "",
+                    "hipaa_acquired_comment": "",
+                    "hipaa_additional_misuse": true,
+                    "hipaa_additional_misuse_comment": ""
+                  },
+                  "comments": [
+                    {
+                      "id": "",
+                      "text": {
+                        "format": "",
+                        "content": ""
+                      },
+                      "type": "",
+                      "inc_id": "",
+                      "actions": [
+                        {
+                          "id": "",
+                          "name": "",
+                          "enabled": true
+                        }
+                      ],
+                      "task_id": "",
+                      "user_id": {
+                        "id": [],
+                        "name": ""
+                      },
+                      "children": [],
+                      "inc_name": "",
+                      "inc_owner": {
+                        "id": [],
+                        "name": ""
+                      },
+                      "parent_id": "",
+                      "playbooks": [
+                        {
+                          "display_name": "",
+                          "playbook_handle": []
+                        }
+                      ],
+                      "task_name": "",
+                      "user_name": "",
+                      "is_deleted": true,
+                      "task_at_id": {
+                        "id": [],
+                        "name": ""
+                      },
+                      "create_date": "",
+                      "modify_date": "",
+                      "task_custom": true,
+                      "task_members": [],
+                      "comment_perms": {
+                        "delete": true,
+                        "update": true
+                      },
+                      "mentioned_users": [],
+                      "modify_principal": {
+                        "id": "",
+                        "name": "",
+                        "type": "",
+                        "display_name": ""
+                      }
+                    }
+                  ],
+                  "findings": [
+                    {
+                      "id": "",
+                      "name": "",
+                      "score": "",
+                      "inc_id": "",
+                      "creator": {
+                        "id": "",
+                        "name": "",
+                        "type": "",
+                        "display_name": ""
+                      },
+                      "severity": "",
+                      "case_name": "",
+                      "mitre_ids": [],
+                      "properties": [
+                        {
+                          "name": "",
+                          "value": ""
+                        }
+                      ],
+                      "description": "",
+                      "created_date": "",
+                      "created_by_id": "",
+                      "original_time": "",
+                      "artifact_count": "",
+                      "data_source_id": "",
+                      "explainability": [
+                        {
+                          "id": "",
+                          "score": "",
+                          "inc_id": "",
+                          "scores": [],
+                          "context": "",
+                          "iart_id": "",
+                          "severity": "",
+                          "finding_id": "",
+                          "create_date": "",
+                          "time_observed": "",
+                          "automatic_score": "",
+                          "parent_incident_id": "",
+                          "correlation_observable_refs": []
+                        }
+                      ],
+                      "automatic_score": "",
+                      "created_by_type": "",
+                      "observable_refs": [],
+                      "cumulative_score": "",
+                      "external_alert_id": "",
+                      "external_severity": "",
+                      "created_by_version": "",
+                      "external_mitre_ids": [],
+                      "low_level_categories": [],
+                      "shared_artifact_count": "",
+                      "detection_source_type_name": "...",
+                      "explainability_score_count": ""
+                    }
+                  ],
+                  "artifacts": [
+                    {
+                      "id": "",
+                      "ip": {
+                        "source": true,
+                        "destination": true
+                      },
+                      "hits": [
+                        {
+                          "id": "",
+                          "value": "",
+                          "active": true,
+                          "created": "",
+                          "properties": [],
+                          "artifact_type_id": [],
+                          "threat_source_id": [],
+                          "threat_source_type": ""
+                        }
+                      ],
+                      "type": {
+                        "id": [],
+                        "name": ""
+                      },
+                      "perms": {
+                        "read": true,
+                        "write": true,
+                        "delete": true
+                      },
+                      "score": "",
+                      "value": "",
+                      "whois": {
+                        "raw": "",
+                        "invalid": true,
+                        "pending": true,
+                        "last_modified_time": ""
+                      },
+                      "inc_id": "",
+                      "actions": [
+                        {
+                          "id": "",
+                          "name": "",
+                          "enabled": ""
+                        }
+                      ],
+                      "created": "",
+                      "inc_name": "",
+                      "location": {
+                        "city": "",
+                        "state": "",
+                        "latlng": [],
+                        "country": "",
+                        "continent": "",
+                        "postalCode": ""
+                      },
+                      "relating": true,
+                      "inc_owner": {
+                        "id": [],
+                        "name": ""
+                      },
+                      "parent_id": "",
+                      "playbooks": [
+                        {
+                          "display_name": "",
+                          "playbook_handle": []
+                        }
+                      ],
+                      "attachment": {
+                        "id": "",
+                        "name": "",
+                        "size": "",
+                        "type": "",
+                        "uuid": "",
+                        "vers": "",
+                        "inc_id": "",
+                        "actions": [],
+                        "created": "",
+                        "task_id": "",
+                        "inc_name": "",
+                        "inc_owner": [],
+                        "playbooks": [],
+                        "task_name": "",
+                        "creator_id": [],
+                        "task_at_id": [],
+                        "task_custom": true,
+                        "content_type": "",
+                        "task_members": [],
+                        "reconciliation_status": ""
+                      },
+                      "properties": [
+                        {
+                          "name": "",
+                          "value": ""
+                        }
+                      ],
+                      "description": {
+                        "format": "",
+                        "content": ""
+                      },
+                      "global_info": {
+                        "id": "",
+                        "tags": [],
+                        "type": [],
+                        "perms": [],
+                        "value": "",
+                        "whois": [],
+                        "created": "",
+                        "creator": [],
+                        "version": "",
+                        "location": [],
+                        "relating": true,
+                        "properties": [],
+                        "description": [],
+                        "scan_option": "",
+                        "last_modified_by": [],
+                        "hit_threat_sources": [],
+                        "last_modified_time": "",
+                        "last_related_inc_id": "",
+                        "first_related_inc_id": "",
+                        "last_associated_time": "",
+                        "first_associated_time": "",
+                        "related_incident_count": "",
+                        "last_related_inc_owner_handle": [],
+                        "first_related_inc_owner_handle": []
+                      },
+                      "context_data": [],
+                      "explainability": [
+                        {
+                          "id": "",
+                          "score": "",
+                          "inc_id": "",
+                          "scores": [],
+                          "context": "",
+                          "iart_id": "",
+                          "severity": "",
+                          "finding_id": "",
+                          "create_date": "",
+                          "time_observed": "",
+                          "automatic_score": "",
+                          "parent_incident_id": "",
+                          "correlation_observable_refs": []
+                        }
+                      ],
+                      "findings_count": "",
+                      "automatic_score": "",
+                      "pending_sources": [],
+                      "cumulative_score": "",
+                      "last_modified_by": {
+                        "id": "",
+                        "name": "",
+                        "type": "",
+                        "display_name": ""
+                      },
+                      "creator_principal": {
+                        "id": "",
+                        "name": "",
+                        "type": "",
+                        "display_name": ""
+                      },
+                      "enrichments_count": "",
+                      "generic_properties": [
+                        {
+                          "name": "",
+                          "value": ""
+                        }
+                      ],
+                      "last_modified_time": "",
+                      "pending_scan_result": true,
+                      "related_incident_count": ""
+                    }
+                  ],
+                  "regulators": {
+                    "ids": []
+                  },
+                  "want_tasks": false,
+                  "description": {
+                    "format": "",
+                    "content": ""
+                  },
+                  "want_full_data": true,
+                  "discovered_date": 0,
+                  "additional_fields": {
+                    "id": "",
+                    "pii": {
+                      "assessment": "",
+                      "data_format": {
+                        "id": [],
+                        "name": ""
+                      },
+                      "harmstatus_id": {
+                        "id": [],
+                        "name": ""
+                      },
+                      "impact_likely": "",
+                      "data_contained": "",
+                      "data_encrypted": "",
+                      "data_source_ids": [],
+                      "determined_date": "",
+                      "data_compromised": "",
+                      "alberta_health_risk_assessment": ""
+                    },
+                    "zip": "",
+                    "addr": "",
+                    "city": "",
+                    "gdpr": {
+                      "gdpr_breach_type": {
+                        "id": [],
+                        "name": ""
+                      },
+                      "gdpr_consequences": {
+                        "id": [],
+                        "name": ""
+                      },
+                      "gdpr_personal_data": {
+                        "id": [],
+                        "name": ""
+                      },
+                      "gdpr_identification": {
+                        "id": [],
+                        "name": ""
+                      },
+                      "gdpr_final_assessment": {
+                        "id": [],
+                        "name": ""
+                      },
+                      "gdpr_breach_type_comment": {
+                        "format": "",
+                        "content": ""
+                      },
+                      "gdpr_breach_circumstances": [],
+                      "gdpr_consequences_comment": {
+                        "format": "",
+                        "content": ""
+                      },
+                      "gdpr_personal_data_comment": {
+                        "format": "",
+                        "content": ""
+                      },
+                      "gdpr_identification_comment": {
+                        "format": "",
+                        "content": ""
+                      },
+                      "gdpr_subsequent_notification": "",
+                      "gdpr_final_assessment_comment": {
+                        "format": "",
+                        "content": ""
+                      }
+                    },
+                    "perms": {
+                      "read": "",
+                      "close": "",
+                      "write": "",
+                      "assign": "",
+                      "delete": "",
+                      "comment": "",
+                      "attach_file": "",
+                      "change_members": "",
+                      "list_artifacts": "",
+                      "list_milestones": "",
+                      "change_workspace": "",
+                      "create_artifacts": "",
+                      "read_attachments": "",
+                      "create_milestones": "",
+                      "delete_attachments": ""
+                    },
+                    "state": {
+                      "id": [],
+                      "name": ""
+                    },
+                    "actions": [
+                      {
+                        "id": "",
+                        "name": "",
+                        "enabled": ""
+                      }
+                    ],
+                    "country": {
+                      "id": [],
+                      "name": ""
+                    },
+                    "members": [],
+                    "due_date": "",
+                    "owner_id": {
+                      "id": [],
+                      "name": ""
+                    },
+                    "phase_id": {
+                      "id": [],
+                      "name": ""
+                    },
+                    "reporter": "",
+                    "confirmed": "",
+                    "playbooks": [
+                      {
+                        "display_name": "",
+                        "playbook_handle": {
+                          "id": [],
+                          "name": ""
+                        }
+                      }
+                    ],
+                    "workspace": {
+                      "id": [],
+                      "name": ""
+                    },
+                    "properties": [],
+                    "start_date": "",
+                    "create_date": "",
+                    "external_id": "",
+                    "is_scenario": "",
+                    "plan_status": "",
+                    "inc_training": "",
+                    "resolution_id": {
+                      "id": [],
+                      "name": ""
+                    },
+                    "sequence_code": "",
+                    "severity_code": {
+                      "id": [],
+                      "name": ""
+                    },
+                    "crimestatus_id": {
+                      "id": [],
+                      "name": ""
+                    },
+                    "explainability": {
+                      "id": "",
+                      "score": "",
+                      "inc_id": "",
+                      "scores": [
+                        {
+                          "id": "",
+                          "score": "",
+                          "rule_id": "",
+                          "category": "",
+                          "severity": "",
+                          "rule_link": "",
+                          "rule_name": "",
+                          "confidence": "",
+                          "description": "",
+                          "module_name": "",
+                          "rule_metadata": "",
+                          "automatic_score": "",
+                          "related_score_count": ""
+                        }
+                      ],
+                      "context": "",
+                      "iart_id": "",
+                      "severity": "",
+                      "finding_id": "",
+                      "create_date": "",
+                      "time_observed": "",
+                      "automatic_score": "",
+                      "parent_incident_id": "",
+                      "correlation_observable_refs": []
+                    },
+                    "regulator_risk": {
+                      "extension1": ""
+                    },
+                    "automatic_score": "",
+                    "data_compromised": "",
+                    "exposure_dept_id": {
+                      "id": [],
+                      "name": ""
+                    },
+                    "exposure_type_id": {
+                      "id": [],
+                      "name": ""
+                    },
+                    "creator_principal": {
+                      "id": "",
+                      "name": "",
+                      "type": "",
+                      "display_name": ""
+                    },
+                    "employee_involved": "",
+                    "incident_type_ids": [],
+                    "jurisdiction_name": "",
+                    "exposure_vendor_id": {
+                      "id": [],
+                      "name": ""
+                    },
+                    "negative_pr_likely": "",
+                    "resolution_summary": {
+                      "format": "",
+                      "content": ""
+                    },
+                    "nist_attack_vectors": [],
+                    "exposure_individual_name": "",
+                    "timer_field_summarized_incident_data": [
+                      {
+                        "sum": "",
+                        "incId": "",
+                        "running": "",
+                        "fieldName": "",
+                        "fieldLabel": "",
+                        "fieldValue": ""
+                      }
+                    ]
+                  }
                 },
-                "version": "1.0.0",
-                "connector": "ibm-soar",
+                "version": "1.1.0",
+                "connector": "ibm-security-qradar-soar",
                 "operation": "create_incident",
-                "operationTitle": "Create Incident"
+                "operationTitle": "Create Incident",
+                "pickFromTenant": false,
+                "step_variables": []
               },
               "status": null,
-              "top": "120",
-              "left": "188",
+              "top": "165",
+              "left": "125",
               "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
               "group": null,
-              "uuid": "823984da-4fec-4d6f-bab2-06388e11cb0d"
+              "uuid": "0ef8fa24-1a5d-42b3-808d-4f37bc4e34da"
             },
             {
               "@type": "WorkflowStep",
               "name": "Start",
               "description": null,
               "arguments": {
+                "route": "3922aaba-4f9b-491d-8eb4-dbc0ba9cad80",
+                "title": "IBM Security QRadar SOAR: Create Incident",
+                "resources": [
+                  "alerts"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
                 "step_variables": {
                   "input": {
-                    "params": []
+                    "params": [],
+                    "records": "{{vars.input.records}}"
                   }
-                }
+                },
+                "triggerOnSource": true,
+                "executeButtonText": "Execute",
+                "noRecordExecution": true,
+                "showToasterMessage": {
+                  "visible": false,
+                  "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
               },
               "status": null,
-              "top": "20",
-              "left": "20",
-              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "top": "30",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
               "group": null,
-              "uuid": "8b26ec36-da28-4d16-b2c6-c9a61985d098"
+              "uuid": "22d6d392-8f47-4f3f-950a-76a7315dda00"
             }
           ],
           "routes": [
             {
               "@type": "WorkflowRoute",
-              "name": "Start-> Create Incident",
-              "targetStep": "/api/3/workflow_steps/823984da-4fec-4d6f-bab2-06388e11cb0d",
-              "sourceStep": "/api/3/workflow_steps/8b26ec36-da28-4d16-b2c6-c9a61985d098",
+              "name": "Start -> Create Incident",
+              "targetStep": "/api/3/workflow_steps/0ef8fa24-1a5d-42b3-808d-4f37bc4e34da",
+              "sourceStep": "/api/3/workflow_steps/22d6d392-8f47-4f3f-950a-76a7315dda00",
               "label": null,
               "isExecuted": false,
               "group": null,
-              "uuid": "37029e8b-61f1-4560-a924-5ad2f02d50ab"
+              "uuid": "f7a20966-3152-440c-8470-ec28a39595f6"
             }
           ],
           "groups": [],
           "priority": null,
           "uuid": "94259522-696d-45f8-8177-a2ca460c5cd2",
-          "id": 1007,
+          "id": 780,
           "owners": [],
           "isPrivate": false,
           "deletedAt": null,
@@ -188,76 +1112,97 @@
         {
           "@type": "Workflow",
           "triggerLimit": null,
-          "name": "Get Open Incidents",
+          "name": "Get Incident Attachments",
           "aliasName": null,
-          "tag": "#IBM Security QRadar SOAR",
-          "description": "Retrieves all open incidents from IBM Security QRadar SOAR.",
+          "tag": null,
+          "description": "Retrieves all the attachments associated with an incident from IBM Security QRadar SOAR based on the incident ID that you have specified.",
           "isActive": false,
           "debug": false,
           "singleRecordExecution": false,
           "remoteExecutableFlag": false,
           "parameters": [],
           "synchronous": false,
-          "lastModifyDate": null,
+          "lastModifyDate": 1735724747,
           "collection": "/api/3/workflow_collections/778a1986-29b8-4e93-8539-3736d7d34331",
           "versions": [],
-          "triggerStep": "/api/3/workflow_steps/2c28cb0b-2c5d-49b7-b2a2-b475f082653e",
+          "triggerStep": "/api/3/workflow_steps/c1fea8b0-82ed-4c84-a33d-d985149e7b0b",
           "steps": [
             {
               "@type": "WorkflowStep",
-              "name": "Get Open Incidents",
+              "name": "Get Incident Attachments",
               "description": null,
               "arguments": {
                 "name": "IBM Security QRadar SOAR",
-                "config": "",
-                "params": [],
-                "version": "1.0.0",
-                "connector": "ibm-soar",
-                "operation": "get_open_incidents",
-                "operationTitle": "Get Open Incidents"
+                "config": "d5e6a7d1-4337-4a6b-95f9-597074e3c7a1",
+                "params": {
+                  "incident_id": "1"
+                },
+                "version": "1.1.0",
+                "connector": "ibm-security-qradar-soar",
+                "operation": "get_incident_attachments",
+                "operationTitle": "Get Incident Attachments",
+                "pickFromTenant": false,
+                "step_variables": []
               },
               "status": null,
-              "top": "120",
-              "left": "188",
+              "top": "165",
+              "left": "125",
               "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
               "group": null,
-              "uuid": "8a0cfeb9-337a-452d-bf82-9e71c1518418"
+              "uuid": "bb44354c-9d74-4c20-ac84-ac1aab96926f"
             },
             {
               "@type": "WorkflowStep",
               "name": "Start",
               "description": null,
               "arguments": {
+                "route": "8964accb-5e69-406f-9997-0569a4d339d4",
+                "title": "IBM Security QRadar SOAR: Get Incident Attachments",
+                "resources": [
+                  "alerts"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
                 "step_variables": {
                   "input": {
-                    "params": []
+                    "params": [],
+                    "records": "{{vars.input.records}}"
                   }
-                }
+                },
+                "triggerOnSource": true,
+                "executeButtonText": "Execute",
+                "noRecordExecution": true,
+                "showToasterMessage": {
+                  "visible": false,
+                  "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
               },
               "status": null,
-              "top": "20",
-              "left": "20",
-              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "top": "30",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
               "group": null,
-              "uuid": "2c28cb0b-2c5d-49b7-b2a2-b475f082653e"
+              "uuid": "c1fea8b0-82ed-4c84-a33d-d985149e7b0b"
             }
           ],
           "routes": [
             {
               "@type": "WorkflowRoute",
-              "name": "Start-> Get Open Incidents",
-              "targetStep": "/api/3/workflow_steps/8a0cfeb9-337a-452d-bf82-9e71c1518418",
-              "sourceStep": "/api/3/workflow_steps/2c28cb0b-2c5d-49b7-b2a2-b475f082653e",
+              "name": "Start -> Get Incident Attachments",
+              "targetStep": "/api/3/workflow_steps/bb44354c-9d74-4c20-ac84-ac1aab96926f",
+              "sourceStep": "/api/3/workflow_steps/c1fea8b0-82ed-4c84-a33d-d985149e7b0b",
               "label": null,
               "isExecuted": false,
               "group": null,
-              "uuid": "16bd3ce4-09d5-4fd5-be03-e5f1c56ef62c"
+              "uuid": "067b1a63-22a1-4abf-91d8-07f56634b179"
             }
           ],
           "groups": [],
-          "priority": null,
-          "uuid": "a6b761b0-bec9-4175-813b-73afa6536266",
-          "id": 1008,
+          "priority": "/api/3/picklists/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+          "uuid": "97068838-08ac-4626-8992-c98c580eb51b",
+          "id": 787,
           "owners": [],
           "isPrivate": false,
           "deletedAt": null,
@@ -280,28 +1225,45 @@
           "remoteExecutableFlag": false,
           "parameters": [],
           "synchronous": false,
-          "lastModifyDate": null,
+          "lastModifyDate": 1729683015,
           "collection": "/api/3/workflow_collections/778a1986-29b8-4e93-8539-3736d7d34331",
           "versions": [],
-          "triggerStep": "/api/3/workflow_steps/ad10e7f8-2f6d-436a-b4e8-903803734e08",
+          "triggerStep": "/api/3/workflow_steps/214c00b1-2f61-48f0-8973-16a48cc78c92",
           "steps": [
             {
               "@type": "WorkflowStep",
               "name": "Start",
               "description": null,
               "arguments": {
+                "route": "543d369c-a07f-44de-b00c-273a6dd83ed3",
+                "title": "IBM Security QRadar SOAR: Update Incident",
+                "resources": [
+                  "alerts"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
                 "step_variables": {
                   "input": {
-                    "params": []
+                    "params": [],
+                    "records": "{{vars.input.records}}"
                   }
-                }
+                },
+                "triggerOnSource": true,
+                "executeButtonText": "Execute",
+                "noRecordExecution": true,
+                "showToasterMessage": {
+                  "visible": false,
+                  "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
               },
               "status": null,
-              "top": "20",
-              "left": "20",
-              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "top": "30",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
               "group": null,
-              "uuid": "ad10e7f8-2f6d-436a-b4e8-903803734e08"
+              "uuid": "214c00b1-2f61-48f0-8973-16a48cc78c92"
             },
             {
               "@type": "WorkflowStep",
@@ -309,47 +1271,384 @@
               "description": null,
               "arguments": {
                 "name": "IBM Security QRadar SOAR",
-                "config": "",
+                "config": "3017f47c-d68b-4682-b16d-014799c23589",
                 "params": {
-                  "name": "",
-                  "nist": "",
-                  "severity": "",
-                  "resolution": "",
-                  "description": "",
-                  "incident_id": "",
-                  "incident_type": "",
-                  "additional_fields": "",
-                  "resolution_summary": ""
+                  "changes": [
+                    {
+                      "field": {
+                        "id": [],
+                        "name": ""
+                      },
+                      "new_value": {
+                        "object": []
+                      },
+                      "old_value": {
+                        "object": []
+                      }
+                    }
+                  ],
+                  "version": "",
+                  "incident_id": "1"
                 },
-                "version": "1.0.0",
-                "connector": "ibm-soar",
+                "version": "1.1.0",
+                "connector": "ibm-security-qradar-soar",
                 "operation": "update_incident",
-                "operationTitle": "Update Incident"
+                "operationTitle": "Update Incident",
+                "pickFromTenant": false,
+                "step_variables": []
               },
               "status": null,
-              "top": "120",
-              "left": "188",
+              "top": "165",
+              "left": "125",
               "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
               "group": null,
-              "uuid": "feb74e66-bbef-42ef-a0e6-7429d8c0e726"
+              "uuid": "b420cb12-e9d3-4487-aa67-0520067ccda4"
             }
           ],
           "routes": [
             {
               "@type": "WorkflowRoute",
-              "name": "Start-> Update Incident",
-              "targetStep": "/api/3/workflow_steps/feb74e66-bbef-42ef-a0e6-7429d8c0e726",
-              "sourceStep": "/api/3/workflow_steps/ad10e7f8-2f6d-436a-b4e8-903803734e08",
+              "name": "Start -> Update Incident",
+              "targetStep": "/api/3/workflow_steps/b420cb12-e9d3-4487-aa67-0520067ccda4",
+              "sourceStep": "/api/3/workflow_steps/214c00b1-2f61-48f0-8973-16a48cc78c92",
               "label": null,
               "isExecuted": false,
               "group": null,
-              "uuid": "95bd0b1f-c46d-4977-98e0-784e27d1a73f"
+              "uuid": "e20786fc-fbab-4f31-8bb2-c0886604378a"
             }
           ],
           "groups": [],
           "priority": null,
           "uuid": "adfb5b24-2307-4bea-8a51-106ccfd8a4df",
-          "id": 1010,
+          "id": 781,
+          "owners": [],
+          "isPrivate": false,
+          "deletedAt": null,
+          "importedBy": [],
+          "recordTags": [
+            "IBM",
+            "ibm-security-qradar-soar"
+          ]
+        },
+        {
+          "@type": "Workflow",
+          "triggerLimit": null,
+          "name": "Get Incident Attachment Details",
+          "aliasName": null,
+          "tag": null,
+          "description": "Retrieves all the attachment details associated with an incident from IBM Security QRadar SOAR based on the incident ID that you have specified.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": false,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1735724806,
+          "collection": "/api/3/workflow_collections/778a1986-29b8-4e93-8539-3736d7d34331",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/381548ff-90ee-4734-a96d-011f1ba82826",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Get Incident Attachment Details",
+              "description": null,
+              "arguments": {
+                "name": "IBM Security QRadar SOAR",
+                "config": "d5e6a7d1-4337-4a6b-95f9-597074e3c7a1",
+                "params": {
+                  "incidentID": "1"
+                },
+                "version": "1.1.0",
+                "connector": "ibm-security-qradar-soar",
+                "operation": "get_incident_attachment_details",
+                "operationTitle": "Get Incident Attachment Details",
+                "pickFromTenant": false,
+                "step_variables": []
+              },
+              "status": null,
+              "top": "165",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "bac1116a-a1af-4954-989a-a3120168a446"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "route": "c9caf15d-3e41-43e4-ba7f-ea0483bb4121",
+                "title": "IBM Security QRadar SOAR: Get Incident Attachment Details",
+                "resources": [
+                  "alerts"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                  "input": {
+                    "params": [],
+                    "records": "{{vars.input.records}}"
+                  }
+                },
+                "triggerOnSource": true,
+                "executeButtonText": "Execute",
+                "noRecordExecution": true,
+                "showToasterMessage": {
+                  "visible": false,
+                  "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
+              },
+              "status": null,
+              "top": "30",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+              "group": null,
+              "uuid": "381548ff-90ee-4734-a96d-011f1ba82826"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Get Incident Attachment Details",
+              "targetStep": "/api/3/workflow_steps/bac1116a-a1af-4954-989a-a3120168a446",
+              "sourceStep": "/api/3/workflow_steps/381548ff-90ee-4734-a96d-011f1ba82826",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "3cd07f15-cde5-444c-9da1-b1f64917ca1e"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+          "uuid": "dce5de82-aee1-4706-8cb7-dd4f3233855a",
+          "id": 788,
+          "owners": [],
+          "isPrivate": false,
+          "deletedAt": null,
+          "importedBy": [],
+          "recordTags": [
+            "IBM",
+            "ibm-security-qradar-soar"
+          ]
+        },
+        {
+          "@type": "Workflow",
+          "triggerLimit": null,
+          "name": "Get Incidents Simulations",
+          "aliasName": null,
+          "tag": null,
+          "description": "Retrieve a list of simulations from IBM Security QRadar SOAR.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": false,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1729682881,
+          "collection": "/api/3/workflow_collections/778a1986-29b8-4e93-8539-3736d7d34331",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/ec822dd7-3145-4dca-b4ab-40c71a69ce80",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Get Incidents Simulations",
+              "description": null,
+              "arguments": {
+                "name": "IBM Security QRadar SOAR",
+                "config": "3017f47c-d68b-4682-b16d-014799c23589",
+                "params": [],
+                "version": "1.1.0",
+                "connector": "ibm-security-qradar-soar",
+                "operation": "get_incident_simulations",
+                "operationTitle": "Get Incidents Simulations",
+                "pickFromTenant": false,
+                "step_variables": []
+              },
+              "status": null,
+              "top": "165",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "b4fe38cf-f095-40d0-b0c2-d427f9b5ec0b"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "route": "885de483-cf8a-4c6b-987c-68849b0846a1",
+                "title": "IBM Security QRadar SOAR: Get Incidents Simulations",
+                "resources": [
+                  "alerts"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                  "input": {
+                    "params": [],
+                    "records": "{{vars.input.records}}"
+                  }
+                },
+                "triggerOnSource": true,
+                "executeButtonText": "Execute",
+                "noRecordExecution": true,
+                "showToasterMessage": {
+                  "visible": false,
+                  "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
+              },
+              "status": null,
+              "top": "30",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+              "group": null,
+              "uuid": "ec822dd7-3145-4dca-b4ab-40c71a69ce80"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Get Incidents Simulations",
+              "targetStep": "/api/3/workflow_steps/b4fe38cf-f095-40d0-b0c2-d427f9b5ec0b",
+              "sourceStep": "/api/3/workflow_steps/ec822dd7-3145-4dca-b4ab-40c71a69ce80",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "3886511d-5b65-46cf-93ab-615bc6b33577"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+          "uuid": "e60a8d4c-855d-4168-b2d6-6eb96f3d3b3e",
+          "id": 782,
+          "owners": [],
+          "isPrivate": false,
+          "deletedAt": null,
+          "importedBy": [],
+          "recordTags": [
+            "IBM",
+            "ibm-security-qradar-soar"
+          ]
+        },
+        {
+          "@type": "Workflow",
+          "triggerLimit": null,
+          "name": "Get All Incident Details",
+          "aliasName": null,
+          "tag": null,
+          "description": "Retrieves all details associated with an incident from IBM Security QRadar SOAR based on the incident ID that you have specified.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": false,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1735724874,
+          "collection": "/api/3/workflow_collections/778a1986-29b8-4e93-8539-3736d7d34331",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/056cb354-35aa-4c87-b6cd-f00836e18c14",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Get All Incident Details",
+              "description": null,
+              "arguments": {
+                "name": "IBM Security QRadar SOAR",
+                "config": "d5e6a7d1-4337-4a6b-95f9-597074e3c7a1",
+                "params": {
+                  "start": "",
+                  "length": "",
+                  "filters": [
+                    {
+                      "conditions": [
+                        {
+                          "type": "",
+                          "value": [],
+                          "method": "",
+                          "field_name": "",
+                          "value_type": "",
+                          "evaluation_id": ""
+                        }
+                      ],
+                      "logic_type": "",
+                      "type_handle": {
+                        "id": [],
+                        "name": ""
+                      }
+                    }
+                  ],
+                  "incidentID": "1"
+                },
+                "version": "1.1.0",
+                "connector": "ibm-security-qradar-soar",
+                "operation": "get_all_incident_details",
+                "operationTitle": "Get All Incident Details",
+                "pickFromTenant": false,
+                "step_variables": []
+              },
+              "status": null,
+              "top": "165",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "b5606f91-9b66-4d63-9cb9-593c3c7b83c1"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "route": "7c3325a2-52b2-479f-a7e7-27a93de363a9",
+                "title": "IBM Security QRadar SOAR: Get All Incident Details",
+                "resources": [
+                  "alerts"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
+                "step_variables": {
+                  "input": {
+                    "params": [],
+                    "records": "{{vars.input.records}}"
+                  }
+                },
+                "triggerOnSource": true,
+                "executeButtonText": "Execute",
+                "noRecordExecution": true,
+                "showToasterMessage": {
+                  "visible": false,
+                  "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
+              },
+              "status": null,
+              "top": "30",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+              "group": null,
+              "uuid": "056cb354-35aa-4c87-b6cd-f00836e18c14"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Get All Incident Details",
+              "targetStep": "/api/3/workflow_steps/b5606f91-9b66-4d63-9cb9-593c3c7b83c1",
+              "sourceStep": "/api/3/workflow_steps/056cb354-35aa-4c87-b6cd-f00836e18c14",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "16f3fbeb-ae3e-47e0-b3bf-aab1dd37e4be"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+          "uuid": "f222c97e-fb5e-4c0e-86de-f64b246678ea",
+          "id": 789,
           "owners": [],
           "isPrivate": false,
           "deletedAt": null,
@@ -372,7 +1671,7 @@
           "remoteExecutableFlag": false,
           "parameters": [],
           "synchronous": false,
-          "lastModifyDate": 1721709195,
+          "lastModifyDate": 1735724511,
           "collection": "/api/3/workflow_collections/778a1986-29b8-4e93-8539-3736d7d34331",
           "versions": [],
           "triggerStep": "/api/3/workflow_steps/92132fee-0892-4c28-a882-fc922fc65ea2",
@@ -383,17 +1682,44 @@
               "description": null,
               "arguments": {
                 "name": "IBM Security QRadar SOAR",
-                "config": "821a86b8-e9de-44ac-b1a6-206d9a1ec18c",
+                "config": "d5e6a7d1-4337-4a6b-95f9-597074e3c7a1",
                 "params": {
-                  "severity": [
-                    "Medium"
+                  "sorts": [
+                    {
+                      "type": "",
+                      "field_name": "",
+                      "type_handle": {
+                        "id": [],
+                        "name": ""
+                      }
+                    }
                   ],
-                  "date_created_after": "",
-                  "date_created_before": "",
-                  "date_occurred_after": "",
-                  "date_occurred_before": ""
+                  "start": "",
+                  "length": "",
+                  "filters": [
+                    {
+                      "conditions": [
+                        {
+                          "type": "",
+                          "value": [],
+                          "method": "",
+                          "field_name": "",
+                          "value_type": "",
+                          "evaluation_id": ""
+                        }
+                      ],
+                      "logic_type": "",
+                      "type_handle": {
+                        "id": [],
+                        "name": ""
+                      }
+                    }
+                  ],
+                  "field_handle": "",
+                  "recordsTotal": "",
+                  "include_records_total": true
                 },
-                "version": "1.0.0",
+                "version": "1.1.0",
                 "connector": "ibm-security-qradar-soar",
                 "operation": "search_incidents",
                 "operationTitle": "Search Incidents",
@@ -405,7 +1731,7 @@
               "left": "125",
               "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
               "group": null,
-              "uuid": "e333b102-ee5c-46b8-9920-aed748dd0dcb"
+              "uuid": "df19eaaf-e271-477c-8b93-0516ef68ac1d"
             },
             {
               "@type": "WorkflowStep",
@@ -447,18 +1773,18 @@
             {
               "@type": "WorkflowRoute",
               "name": "Start -> Search Incidents",
-              "targetStep": "/api/3/workflow_steps/e333b102-ee5c-46b8-9920-aed748dd0dcb",
+              "targetStep": "/api/3/workflow_steps/df19eaaf-e271-477c-8b93-0516ef68ac1d",
               "sourceStep": "/api/3/workflow_steps/92132fee-0892-4c28-a882-fc922fc65ea2",
               "label": null,
               "isExecuted": false,
               "group": null,
-              "uuid": "fbcecbae-2449-4748-8fb7-dc2ecd6df381"
+              "uuid": "213d84eb-aaee-4fbc-ad19-7de0bfb37b83"
             }
           ],
           "groups": [],
           "priority": "/api/3/picklists/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
           "uuid": "f32267a3-077c-4c34-92ff-51d9b1a7ec07",
-          "id": 1012,
+          "id": 783,
           "owners": [],
           "isPrivate": false,
           "deletedAt": null,
@@ -481,10 +1807,10 @@
           "remoteExecutableFlag": false,
           "parameters": [],
           "synchronous": false,
-          "lastModifyDate": null,
+          "lastModifyDate": 1729683068,
           "collection": "/api/3/workflow_collections/778a1986-29b8-4e93-8539-3736d7d34331",
           "versions": [],
-          "triggerStep": "/api/3/workflow_steps/278b95fa-1d66-4f7c-9dd0-8d9d77775823",
+          "triggerStep": "/api/3/workflow_steps/d4d0601d-fdc6-46e4-85a7-595a703ada86",
           "steps": [
             {
               "@type": "WorkflowStep",
@@ -492,57 +1818,76 @@
               "description": null,
               "arguments": {
                 "name": "IBM Security QRadar SOAR",
-                "config": "",
+                "config": "3017f47c-d68b-4682-b16d-014799c23589",
                 "params": {
-                  "incident_id": ""
+                  "incident_id": "1"
                 },
-                "version": "1.0.0",
-                "connector": "ibm-soar",
+                "version": "1.1.0",
+                "connector": "ibm-security-qradar-soar",
                 "operation": "close_incident",
-                "operationTitle": "Close Incident"
+                "operationTitle": "Close Incident",
+                "pickFromTenant": false,
+                "step_variables": []
               },
               "status": null,
-              "top": "120",
-              "left": "188",
+              "top": "165",
+              "left": "125",
               "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
               "group": null,
-              "uuid": "ca255bc8-bb20-4ca0-a106-e56d20f259b3"
+              "uuid": "bc669df1-372b-4486-8177-8df63cb8aa6e"
             },
             {
               "@type": "WorkflowStep",
               "name": "Start",
               "description": null,
               "arguments": {
+                "route": "c0a8fbbc-71c6-4a02-8b5f-ee1beb5c526f",
+                "title": "IBM Security QRadar SOAR: Close Incident",
+                "resources": [
+                  "alerts"
+                ],
+                "__triggerLimit": true,
+                "inputVariables": [],
                 "step_variables": {
                   "input": {
-                    "params": []
+                    "params": [],
+                    "records": "{{vars.input.records}}"
                   }
-                }
+                },
+                "triggerOnSource": true,
+                "executeButtonText": "Execute",
+                "noRecordExecution": true,
+                "showToasterMessage": {
+                  "visible": false,
+                  "messageVisible": true
+                },
+                "triggerOnReplicate": false,
+                "singleRecordExecution": false
               },
               "status": null,
-              "top": "20",
-              "left": "20",
-              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "top": "30",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
               "group": null,
-              "uuid": "278b95fa-1d66-4f7c-9dd0-8d9d77775823"
+              "uuid": "d4d0601d-fdc6-46e4-85a7-595a703ada86"
             }
           ],
           "routes": [
             {
               "@type": "WorkflowRoute",
-              "name": "Start-> Close Incident",
-              "targetStep": "/api/3/workflow_steps/ca255bc8-bb20-4ca0-a106-e56d20f259b3",
-              "sourceStep": "/api/3/workflow_steps/278b95fa-1d66-4f7c-9dd0-8d9d77775823",
+              "name": "Start -> Close Incident",
+              "targetStep": "/api/3/workflow_steps/bc669df1-372b-4486-8177-8df63cb8aa6e",
+              "sourceStep": "/api/3/workflow_steps/d4d0601d-fdc6-46e4-85a7-595a703ada86",
               "label": null,
               "isExecuted": false,
               "group": null,
-              "uuid": "bfbcf493-649e-408c-b5c8-f664653263d9"
+              "uuid": "41abafc8-caf7-410e-87c2-1ba25b157601"
             }
           ],
           "groups": [],
           "priority": null,
           "uuid": "f7ea4ea7-3ece-4728-98bd-65b0374c6181",
-          "id": 1011,
+          "id": 784,
           "owners": [],
           "isPrivate": false,
           "deletedAt": null,
